@@ -169,7 +169,7 @@ public class PlaceholderAPI implements Listener {
 		}
 		List<String> temp = new ArrayList<String>();
 		for (String line : text) {
-			temp.add(ChatColor.translateAlternateColorCodes('&', setPlaceholders(p, line)));
+			temp.add(setPlaceholders(p, line));
 		}
 		return temp;
 	}
