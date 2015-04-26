@@ -97,8 +97,9 @@ public class VaultHook {
 								case "groupsuffix":
 								case "ranksuffix":
 									return getGroupSuffix(p) != null ? getGroupSuffix(p) : "";
+								case "prefix_color":
+									return getGroupPrefixColor(p) != null ? getGroupPrefixColor(p) : "";
 								}
-
 								return null;
 							}
 						});
@@ -364,6 +365,19 @@ public class VaultHook {
 		for (String group : perms.getPlayerGroups(p)) {
 			if (chat.getGroupPrefix(p.getWorld(), group) != null) {
 				return String.valueOf(chat.getGroupPrefix(p.getWorld(), group));
+			}
+		}
+		return "";
+	}
+	
+	public String getGroupPrefixColor(Player p) {
+		if (perms.getPlayerGroups(p) == null) {
+			return "";
+		}
+		
+		for (String group : perms.getPlayerGroups(p)) {
+			if (chat.getGroupPrefix(p.getWorld(), group) != null) {
+				return String.valueOf(chat.getGroupPrefix(p.getWorld(), group).substring(0, 2));
 			}
 		}
 		return "";

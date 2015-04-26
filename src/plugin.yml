@@ -1,6 +1,15 @@
 name: PlaceholderAPI
 main: me.clip.placeholderapi.PlaceholderAPIPlugin
-version: 1.0
+version: 1.3
 author: [extended_clip]
 description: Clips public placeholder API that allows other plugins to obtain and register placeholders to show information from other plugins!
-softdepend: [AcidIsland, ASkyBlock, Autorank, AutoSell, ChatReaction, Essentials, EZBlocks, EZPrestige, EZRanksLite, Factions, GAListener, GangsPlus, IslandWorld, Jobs, killStats, LWC, MarriageMaster, mcMMO, Nicky, PlotMe, PlayerPoints, PlotMe, PlotSquared, PrisonGangs, pvpstats, QuickSell, RoyalCommands, SimpleClans, SimpleCoinsAPI, Simple Suffix, SkyWarsReloaded, SQLPerms, SQLTokens, Teams, TokenEnchant, Towny, uSkyBlock, UltimateVotes, Vault, WickedSkyWars]
+softdepend: [AcidIsland, ASkyBlock, Autorank, AutoSell, ChatReaction, CheckNameHistory, Essentials, EZBlocks, EZPrestige, EZRanksLite, Factions, GAListener, GangsPlus, IslandWorld, Jobs, killStats, LWC, MarriageMaster, mcMMO, Nicky, PlotMe, PlayerPoints, PlotMe, PlotSquared, PrisonGangs, pvpstats, QuickSell, RoyalCommands, SimpleClans, SimpleCoinsAPI, Simple Suffix, SkyWarsReloaded, SQLPerms, SQLTokens, Teams, TokenEnchant, Towny, uSkyBlock, UltimateVotes, Vault, WickedSkyWars]
+permissions:
+    placeholderapi.admin:
+        description: ability to use admin commands
+        default: op
+commands:
+   placeholderapi:
+     description: PlaceholderAPI command
+     aliases: [clipsplaceholderapi]
+     

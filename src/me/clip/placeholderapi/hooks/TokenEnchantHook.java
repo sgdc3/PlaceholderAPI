@@ -16,6 +16,8 @@ public class TokenEnchantHook {
 	public TokenEnchantHook(PlaceholderAPIPlugin i) {
 		plugin = i;
 	}
+	
+
 
 	private TokenEnchant te;
 	

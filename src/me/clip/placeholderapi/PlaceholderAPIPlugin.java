@@ -1,5 +1,6 @@
 package me.clip.placeholderapi;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
@@ -8,6 +9,7 @@ import me.clip.placeholderapi.hooks.AcidIslandHook;
 import me.clip.placeholderapi.hooks.AutoRankHook;
 import me.clip.placeholderapi.hooks.AutoSellHook;
 import me.clip.placeholderapi.hooks.ChatReactionHook;
+import me.clip.placeholderapi.hooks.CheckNameHistoryHook;
 import me.clip.placeholderapi.hooks.EZBlocksHook;
 import me.clip.placeholderapi.hooks.EZPrestigeHook;
 import me.clip.placeholderapi.hooks.EZRanksLiteHook;
@@ -33,6 +35,7 @@ import me.clip.placeholderapi.hooks.QuickSellHook;
 import me.clip.placeholderapi.hooks.RoyalCommandsHook;
 import me.clip.placeholderapi.hooks.SQLPermsHook;
 import me.clip.placeholderapi.hooks.SQLTokensHook;
+import me.clip.placeholderapi.hooks.SimpleClansHook;
 import me.clip.placeholderapi.hooks.SimpleCoinsAPIHook;
 import me.clip.placeholderapi.hooks.SimpleSuffixHook;
 import me.clip.placeholderapi.hooks.SkyWarsReloadedHook;
@@ -44,6 +47,7 @@ import me.clip.placeholderapi.hooks.USkyblockHook;
 import me.clip.placeholderapi.hooks.UltimateVotesHook;
 import me.clip.placeholderapi.hooks.VaultHook;
 import me.clip.placeholderapi.hooks.WickedSkywarsHook;
+import me.clip.placeholderapi.metricslite.MetricsLite;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,7 +99,48 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 
 		api = new PlaceholderAPI(this);
 		
+		getCommand("placeholderapi").setExecutor(new PlaceholderAPICommands(this));
+		
 		initializeHooks();
+		
+		if (!startMetricsLite()) {
+			log.warning("Could not start MetricsLite");
+		}
+		
+		log.info(PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" placeholder hooks successfully registered!");
+	}
+	
+	private boolean startMetricsLite() {
+		try {
+			MetricsLite ml = new MetricsLite(this);
+			ml.start();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+	
+	protected void reloadConf() {
+		reloadConfig();
+		saveConfig();
+		
+		booleanTrue = config.booleanTrue();
+		
+		if (booleanTrue == null) {
+			booleanTrue = "true";
+		}
+		
+		booleanFalse = config.booleanFalse();
+		
+		if (booleanFalse == null) {
+			booleanFalse = "false";
+		}
+		
+		try {
+			dateFormat = new SimpleDateFormat(config.dateFormat());
+		} catch (Exception e) {
+			dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+		}
 	}
 
 	@Override
@@ -128,6 +173,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.chatreaction")) {
 			new ChatReactionHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.checknamehistory")) {
+			new CheckNameHistoryHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.essentials")) {
@@ -217,6 +266,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.royalcommands")) {
 			new RoyalCommandsHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.simpleclans")) {
+			new SimpleClansHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.simplecoinsapi")) {

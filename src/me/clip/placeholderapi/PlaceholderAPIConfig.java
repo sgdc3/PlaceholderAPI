@@ -28,6 +28,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.autosell", false);
 		c.addDefault("hooks.battlelevels", false);
 		c.addDefault("hooks.chatreaction", false);
+		c.addDefault("hooks.checknamehistory", false);
 		c.addDefault("hooks.essentials", false);
 		c.addDefault("hooks.ezblocks", false);
 		c.addDefault("hooks.ezprestige", false);
@@ -49,6 +50,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.pvpstats", false);
 		c.addDefault("hooks.quicksell", false);
 		c.addDefault("hooks.royalcommands", false);
+		c.addDefault("hooks.simpleclans", false);
 		c.addDefault("hooks.simplecoinsapi", false);
 		c.addDefault("hooks.simple_suffix", false);
 		c.addDefault("hooks.skywarsreloaded", false);

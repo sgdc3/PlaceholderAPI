@@ -17,6 +17,7 @@ public class PlayerPlaceholders {
 		plugin = i;	
 	}
 
+ 
 	public void hook() {
 
 		boolean hooked = PlaceholderAPI.registerPlaceholderHook("player", new PlaceholderHook() {

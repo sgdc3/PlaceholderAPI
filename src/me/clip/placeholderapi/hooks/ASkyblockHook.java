@@ -3,8 +3,8 @@ package me.clip.placeholderapi.hooks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.wasteofplastic.acidisland.ASkyBlock;
-import com.wasteofplastic.acidisland.ASkyBlockAPI;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
+import com.wasteofplastic.askyblock.ASkyBlock;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;

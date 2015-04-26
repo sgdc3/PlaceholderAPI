@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.api.PartyAPI;
+import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.util.player.UserManager;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
@@ -27,11 +29,17 @@ public class McMMOHook {
 				@Override
 				public String onPlaceholderRequest(Player p, String identifier) {
 					
+					McMMOPlayer player = UserManager.getPlayer(p);
+					
+					if (player == null) {
+						return "";
+					}
+					
 					if (identifier.startsWith("level_")) {
 						
 						String skill = identifier.split("level_")[1];
 						
-						return getSkillLevel(p, skill);
+						return getSkillLevel(player, skill);
 					}
 					
 					if (identifier.startsWith("rank_")) {
@@ -103,48 +111,79 @@ public class McMMOHook {
 		return leader != null ? leader : "";
 	}
 	
-	private String getSkillLevel(Player p, String skill) {
+	private String getSkillLevel(McMMOPlayer p, String skill) {
 		
-		if (!ExperienceAPI.isValidSkillType(skill)) {
-			return "";
+		switch (skill) {
+		
+		case "acrobatics":
+			return String.valueOf(p.getAcrobaticsManager().getSkillLevel());
+		case "alchemy":
+			return String.valueOf(p.getAlchemyManager().getSkillLevel());
+		case "archery":
+			return String.valueOf(p.getArcheryManager().getSkillLevel());
+		case "axes":
+			return String.valueOf(p.getAxesManager().getSkillLevel());
+		case "excavation":
+			return String.valueOf(p.getExcavationManager().getSkillLevel());
+		case "fishing":
+			return String.valueOf(p.getFishingManager().getSkillLevel());
+		case "herbalism":
+			return String.valueOf(p.getHerbalismManager().getSkillLevel());
+		case "mining":
+			return String.valueOf(p.getMiningManager().getSkillLevel());
+		case "repair":
+			return String.valueOf(p.getRepairManager().getSkillLevel());
+		case "salvage":
+			return String.valueOf(p.getSalvageManager().getSkillLevel());
+		case "smelting":
+			return String.valueOf(p.getSmeltingManager().getSkillLevel());
+		case "swords":
+			return String.valueOf(p.getSwordsManager().getSkillLevel());
+		case "taming":
+			return String.valueOf(p.getTamingManager().getSkillLevel());
+		case "unarmed":
+			return String.valueOf(p.getUnarmedManager().getSkillLevel());
+		case "woodcutting":
+			return String.valueOf(p.getWoodcuttingManager().getSkillLevel());
 		}
 		
-		return String.valueOf(ExperienceAPI.getLevel(p, skill));
+		
+		return null;
 	}
 	
 	private String getSkillRank(Player p, String skill) {
 		
-		if (!ExperienceAPI.isValidSkillType(skill)) {
+		if (!ExperienceAPI.isValidSkillType(skill.toUpperCase())) {
 			return "";
 		}
 		
-		return String.valueOf(ExperienceAPI.getPlayerRankSkill(p.getUniqueId(), skill));
+		return String.valueOf(ExperienceAPI.getPlayerRankSkill(p.getUniqueId(), skill.toUpperCase()));
 	}
 	
 	private String getSkillXP(Player p, String skill) {
 		
-		if (!ExperienceAPI.isValidSkillType(skill)) {
+		if (!ExperienceAPI.isValidSkillType(skill.toUpperCase())) {
 			return "";
 		}
 		
-		return String.valueOf(ExperienceAPI.getXP(p, skill));
+		return String.valueOf(ExperienceAPI.getXP(p, skill.toUpperCase()));
 	}
 
 	private String getXPRemaining(Player p, String skill) {
 		
-		if (!ExperienceAPI.isValidSkillType(skill)) {
+		if (!ExperienceAPI.isValidSkillType(skill.toUpperCase())) {
 			return "";
 		}
 		
-		return String.valueOf(ExperienceAPI.getXPRemaining(p, skill));
+		return String.valueOf(ExperienceAPI.getXPRemaining(p, skill.toUpperCase()));
 	}
 	
 	private String getXPToNextLevel(Player p, String skill) {
 		
-		if (!ExperienceAPI.isValidSkillType(skill)) {
+		if (!ExperienceAPI.isValidSkillType(skill.toUpperCase())) {
 			return "";
 		}
 		
-		return String.valueOf(ExperienceAPI.getXPToNextLevel(p, skill));
+		return String.valueOf(ExperienceAPI.getXPToNextLevel(p, skill.toUpperCase()));
 	}
 }

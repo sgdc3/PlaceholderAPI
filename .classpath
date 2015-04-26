@@ -45,5 +45,7 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Vault.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/VoteParty.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/WickedSkyWars.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/CheckNameHistory.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SimpleClans.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

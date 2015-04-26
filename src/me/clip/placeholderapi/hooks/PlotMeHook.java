@@ -86,8 +86,6 @@ public class PlotMeHook {
 							return plot.getFinishedDate();
 						case "current_plot_world":
 							return plot.getWorld();
-						case "current_plot_biome":
-							return plot.getBiome().toString();
 						case "current_plot_current_bid":
 							return String.valueOf(plot.getCurrentBid());
 						case "current_plot_custom_price":
