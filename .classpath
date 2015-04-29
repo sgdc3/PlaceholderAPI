@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8.3-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/acidisland.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/askyblock.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Downloads/Autorank.jar"/>
@@ -47,5 +45,12 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/WickedSkyWars.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/CheckNameHistory.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SimpleClans.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Skript.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8.3-R0.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8-R0.1-SNAPSHOT-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8-R0.1-SNAPSHOT-latest.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/bukkit-1.7.10-R0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot1649.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

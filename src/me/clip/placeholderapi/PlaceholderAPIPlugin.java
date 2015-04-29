@@ -39,7 +39,9 @@ import me.clip.placeholderapi.hooks.SimpleClansHook;
 import me.clip.placeholderapi.hooks.SimpleCoinsAPIHook;
 import me.clip.placeholderapi.hooks.SimpleSuffixHook;
 import me.clip.placeholderapi.hooks.SkyWarsReloadedHook;
-import me.clip.placeholderapi.hooks.StatisticPlaceholders;
+import me.clip.placeholderapi.hooks.Statistic_1_7_10_Placeholders;
+import me.clip.placeholderapi.hooks.Statistic_1_8_1_Placeholders;
+import me.clip.placeholderapi.hooks.Statistic_1_8_3_Placeholders;
 import me.clip.placeholderapi.hooks.TeamsHook;
 import me.clip.placeholderapi.hooks.TokenEnchantHook;
 import me.clip.placeholderapi.hooks.TownyHook;
@@ -49,6 +51,7 @@ import me.clip.placeholderapi.hooks.VaultHook;
 import me.clip.placeholderapi.hooks.WickedSkywarsHook;
 import me.clip.placeholderapi.metricslite.MetricsLite;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -153,8 +156,18 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		new PlayerPlaceholders(this).hook();
 		
+		String version = Bukkit.getBukkitVersion();
+		
 		if (getConfig().getBoolean("hooks.minecraft_statistics")) {
-			new StatisticPlaceholders(this).hook();
+			if (version.startsWith("1.8.3")) {
+				new Statistic_1_8_3_Placeholders(this).hook();
+			} else if (version.startsWith("1.8")) {
+				new Statistic_1_8_1_Placeholders(this).hook();
+			}  else if (version.startsWith("1.7")) {
+				new Statistic_1_7_10_Placeholders(this).hook();
+			} else {
+				getLogger().warning("Statistic placeholders are not available for your server version!");
+			}
 		}
 		
 		if (getConfig().getBoolean("hooks.acidisland")) {
