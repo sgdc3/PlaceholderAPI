@@ -120,7 +120,7 @@ public class SimpleClansHook {
 									}
 									return null;
 								}
-							});
+							}, true);
 
 					if (hooked) {
 						plugin.log.info("Hooked into SimpleClans for placeholders!");

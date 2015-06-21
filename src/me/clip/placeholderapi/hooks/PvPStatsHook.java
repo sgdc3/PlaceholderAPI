@@ -40,7 +40,7 @@ public class PvPStatsHook {
 							}
 							return null;
 						}
-					});
+					}, true);
 
 			if (hooked) {
 				plugin.log.info("Hooked into pvpstats for placeholders!");

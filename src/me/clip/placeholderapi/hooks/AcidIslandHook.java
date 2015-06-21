@@ -57,7 +57,7 @@ public class AcidIslandHook {
 						}
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into AcidIsland for placeholders!");

@@ -62,7 +62,7 @@ public class FactionsUUIDHook{
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Factions 1.6.9.5 by drtshock for placeholders!");

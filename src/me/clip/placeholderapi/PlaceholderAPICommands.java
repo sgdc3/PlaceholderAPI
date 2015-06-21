@@ -57,11 +57,10 @@ public class PlaceholderAPICommands implements CommandExecutor {
 				
 			} else if (args[0].equalsIgnoreCase("reload")) {
 
-				plugin.reloadConf();
+				
 				sms(s, "&8&m-----------------------------------------------------");
 				sms(s, "&cClips &fPlaceholder&7API &bconfiguration reloaded!");
-				sms(s, "&7Keep in mind this does not update placeholder hook settings!");
-				sms(s, "&7You must restart for placeholder hook changes to take effect!");
+				plugin.reloadConf(s);
 				sms(s, "&8&m-----------------------------------------------------");
 
 			} else if (args[0].equalsIgnoreCase("list")) {

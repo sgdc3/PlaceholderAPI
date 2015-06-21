@@ -37,7 +37,7 @@ public class UltimateVotesHook {
 								}
 								return null;
 							}
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into UltimateVotes for placeholders!");

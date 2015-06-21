@@ -51,7 +51,7 @@ public class KillStatsHook {
 						}
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into killStats for placeholders!");

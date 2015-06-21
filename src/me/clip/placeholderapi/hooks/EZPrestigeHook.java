@@ -46,7 +46,7 @@ public class EZPrestigeHook {
 								
 								return null;
 							}
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into EZPrestige for placeholders!");

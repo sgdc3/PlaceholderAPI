@@ -40,7 +40,7 @@ public class TokenEnchantHook {
 								return null;
 							}
 
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into TokenEnchant for placeholders!");

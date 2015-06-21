@@ -37,7 +37,7 @@ public class SimpleSuffixHook {
 								return null;
 							}
 
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into Simple Suffix for placeholders!");

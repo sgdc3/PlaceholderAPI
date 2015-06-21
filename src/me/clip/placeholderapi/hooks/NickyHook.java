@@ -34,7 +34,7 @@ public class NickyHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Nicky for nicknames!");

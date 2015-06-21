@@ -45,7 +45,7 @@ public class WickedSkywarsHook {
 							}
 							return null;
 						}
-					});
+					}, true);
 
 			if (hooked) {
 				plugin.log.info("Hooked into WickedSkyWars for placeholders!");

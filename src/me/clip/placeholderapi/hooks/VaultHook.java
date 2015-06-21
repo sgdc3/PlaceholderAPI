@@ -67,7 +67,7 @@ public class VaultHook {
 								return null;
 							}
 
-						});
+						}, true);
 
 				if (ecoHooked) {
 					plugin.log.info("Hooked into Vault for economy placeholders!");
@@ -81,6 +81,52 @@ public class VaultHook {
 
 							@Override
 							public String onPlaceholderRequest(Player p, String identifier) {
+								
+								if (identifier.startsWith("rankprefix_")) {
+									
+									int i = 1;
+									
+									try {
+										i = Integer.parseInt(identifier.split("rankprefix_")[1]);
+									} catch (Exception e) {
+										
+									}
+									
+									return getGroupPrefix(p, i);
+								} else if (identifier.startsWith("ranksuffix_")) {
+									
+									int i = 1;
+									
+									try {
+										i = Integer.parseInt(identifier.split("ranksuffix_")[1]);
+									} catch (Exception e) {
+										
+									}
+									
+									return getGroupSuffix(p, i);
+								} else if (identifier.startsWith("groupprefix_")) {
+									
+									int i = 1;
+									
+									try {
+										i = Integer.parseInt(identifier.split("groupprefix_")[1]);
+									} catch (Exception e) {
+										
+									}
+									
+									return getGroupPrefix(p, i);
+								} else if (identifier.startsWith("groupsuffix_")) {
+									
+									int i = 1;
+									
+									try {
+										i = Integer.parseInt(identifier.split("groupsuffix_")[1]);
+									} catch (Exception e) {
+										
+									}
+									
+									return getGroupSuffix(p, i);
+								}
 								
 								switch (identifier) {
 								
@@ -102,7 +148,7 @@ public class VaultHook {
 								}
 								return null;
 							}
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into Vault for permissions placeholders!");
@@ -345,28 +391,80 @@ public class VaultHook {
 	}
 	
 	public String getGroupSuffix(Player p) {
-		if (perms.getPlayerGroups(p) == null) {
+		if (perms.getPrimaryGroup(p) == null) {
 			return "";
 		}
 		
-		for (String group : perms.getPlayerGroups(p)) {
-			if (chat.getGroupSuffix(p.getWorld(), group) != null) {
-				return String.valueOf(chat.getGroupSuffix(p.getWorld(), group));
-			}
+		if (chat.getGroupSuffix(p.getWorld(), perms.getPrimaryGroup(p)) != null) {
+			return String.valueOf(chat.getGroupSuffix(p.getWorld(), perms.getPrimaryGroup(p)));
 		}
 		return "";
 	}
 	
 	public String getGroupPrefix(Player p) {
+		if (perms.getPrimaryGroup(p) == null) {
+			return "";
+		}
+		
+		if (chat.getGroupPrefix(p.getWorld(), perms.getPrimaryGroup(p)) != null) {
+			return String.valueOf(chat.getGroupPrefix(p.getWorld(), perms.getPrimaryGroup(p)));
+		}
+
+		return "";
+	}
+	
+	public String getGroupSuffix(Player p, int i) {
+		
 		if (perms.getPlayerGroups(p) == null) {
 			return "";
 		}
 		
-		for (String group : perms.getPlayerGroups(p)) {
+		String[] groups = perms.getPlayerGroups(p);
+		if (i > groups.length) {
+			return "";
+		}
+		
+		int count = 1;
+		
+		for (String group : groups) {
+			
+			if (count < i) {
+				count++;
+				continue;
+			}
+			
+			if (chat.getGroupSuffix(p.getWorld(), group) != null) {
+				return String.valueOf(chat.getGroupSuffix(p.getWorld(), group));
+			}
+		}
+		
+		return "";
+	}
+	
+	public String getGroupPrefix(Player p, int i) {
+		
+		if (perms.getPlayerGroups(p) == null) {
+			return "";
+		}
+		
+		String[] groups = perms.getPlayerGroups(p);
+		if (i > groups.length) {
+			return "";
+		}
+		
+		int count = 1;
+		for (String group : groups) {
+			
+			if (count < i) {
+				count++;
+				continue;
+			}
+			
 			if (chat.getGroupPrefix(p.getWorld(), group) != null) {
 				return String.valueOf(chat.getGroupPrefix(p.getWorld(), group));
 			}
 		}
+		
 		return "";
 	}
 	

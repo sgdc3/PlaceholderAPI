@@ -72,10 +72,9 @@ public class McMMOHook {
 					
 					switch (identifier) {
 					
-					case "overall_rank":
-						return String.valueOf(ExperienceAPI.getPlayerRankOverall(p.getUniqueId()));
 					case "power_level":
-						return String.valueOf(ExperienceAPI.getPowerLevel(p));
+						
+						return String.valueOf(player.getPowerLevel());
 					case "power_level_cap":
 						return String.valueOf(ExperienceAPI.getPowerLevelCap());
 					case "in_party":
@@ -92,7 +91,7 @@ public class McMMOHook {
 
 					return null;
 				}	
-			});
+			}, true);
 			
 			if (hooked) {
 				plugin.getLogger().info("Hooked into mcMMO for placeholders!");

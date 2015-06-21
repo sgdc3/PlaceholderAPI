@@ -44,7 +44,7 @@ public class LWCHook {
 					return null;
 				}
 				   
-			   });
+			   }, true);
 			  
 			  if (hooked) {
 				  plugin.log.info("Hooked into LWC for placeholders!");

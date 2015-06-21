@@ -33,7 +33,7 @@ public class RoyalCommandsHook {
 							return null;
 						}
 
-					});
+					}, true);
 
 			if (hooked) {
 				plugin.log.info("Hooked into RoyalCommands for placeholders!");

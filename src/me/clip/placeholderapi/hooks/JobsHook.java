@@ -116,7 +116,7 @@ public class JobsHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Jobs for placeholders!");

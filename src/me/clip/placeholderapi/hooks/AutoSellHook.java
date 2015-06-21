@@ -61,7 +61,7 @@ public class AutoSellHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into AutoSell for placeholders!");

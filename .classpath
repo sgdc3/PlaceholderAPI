@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Essentials-1.8.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EZBlocks.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EZPrestige.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EZRanksLite.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Factions.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/FactionsUUID.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/GAListener.jar"/>
@@ -52,5 +51,12 @@
 	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8-R0.1-SNAPSHOT-latest.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/bukkit-1.7.10-R0.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot1649.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8.4-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Simple-Prefix.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/EZRanksLite.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/My Plugins/DeluxeTags.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/McInfected.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/McInfected-Ranks.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

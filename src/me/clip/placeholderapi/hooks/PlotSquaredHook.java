@@ -60,7 +60,7 @@ public class PlotSquaredHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into PlotSquared for placeholders!");

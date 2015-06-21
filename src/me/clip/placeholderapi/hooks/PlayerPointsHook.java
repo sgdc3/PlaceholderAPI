@@ -40,7 +40,7 @@ public class PlayerPointsHook {
 						
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into PlayerPoints for placeholders!");

@@ -48,7 +48,7 @@ public class IslandWorldHook {
 						}
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into IslandWorld for placeholders!");

@@ -35,7 +35,7 @@ public class GAListenerHook {
 						}
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into GAListener for placeholders!");

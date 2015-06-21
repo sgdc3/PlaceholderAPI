@@ -32,7 +32,7 @@ public class SimpleCoinsAPIHook {
 					return null;
 				}
 				
-			});
+			}, true);
 			
 			if (hooked) {
 				plugin.log.info("Hooked into QuickSell for placeholders!");

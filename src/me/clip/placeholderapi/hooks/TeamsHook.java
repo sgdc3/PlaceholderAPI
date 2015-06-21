@@ -55,7 +55,7 @@ public class TeamsHook {
 
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Teams for placeholders!");

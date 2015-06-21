@@ -70,7 +70,7 @@ public class FactionsHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Factions " + version+" for placeholders!");

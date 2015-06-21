@@ -113,7 +113,7 @@ public class PlotMeHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Successfully hooked into PlotMe for placeholders!");

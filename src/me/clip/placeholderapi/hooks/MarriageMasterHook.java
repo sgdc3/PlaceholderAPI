@@ -43,7 +43,7 @@ public class MarriageMasterHook {
 								return null;
 							}
 
-						});
+						}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into MarriageMaster for paceholders!");

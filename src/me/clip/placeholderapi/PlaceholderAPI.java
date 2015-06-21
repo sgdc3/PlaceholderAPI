@@ -26,6 +26,8 @@ public class PlaceholderAPI implements Listener {
 
 	private static Map<String, PlaceholderHook> placeholders = new HashMap<String, PlaceholderHook>();
 
+	private static Set<String> externalHooks = new HashSet<String>();
+	
 	public PlaceholderAPI(PlaceholderAPIPlugin i) {
 		plugin = i;
 		Bukkit.getPluginManager().registerEvents(this, i);
@@ -43,7 +45,28 @@ public class PlaceholderAPI implements Listener {
 			}
 		}
 	}
-
+	
+	protected void resetInternalPlaceholderHooks() {
+		
+		Set<String> registered = getRegisteredPlaceholderPlugins();
+		
+		Set<String> external = getExternalPlaceholderPlugins();
+		
+		for (String pl : registered) {
+			
+			if (!external.contains(pl)) {
+				unregisterPlaceholderHook(pl);
+			}
+		}
+		
+		plugin.initializeHooks();
+	}
+	
+	protected void unregisterAll() {
+		placeholders = null;
+		externalHooks = null;
+	}
+	
 	/**
 	 * registers a placeholder hook specific to the plugin specified. Any time a placeholder that matches the plugin name, 
 	 * the method inside of the PlaceholderHook will be called to retrieve a value
@@ -56,18 +79,11 @@ public class PlaceholderAPI implements Listener {
 	 */
 	public static boolean registerPlaceholderHook(Plugin plugin, PlaceholderHook placeholderHook) {
 		
-		if (placeholders == null ) {
-			placeholders = new HashMap<String, PlaceholderHook>();
-		}
-		
-		if (plugin == null 
-				|| placeholderHook == null 
-				|| placeholders.containsKey(plugin.getName())) {
+		if (plugin == null) {
 			return false;
 		}
 
-		placeholders.put(plugin.getName(), placeholderHook);
-		return true;
+		return registerPlaceholderHook(plugin.getName(), placeholderHook, false);
 	}
 	
 	/**
@@ -81,6 +97,43 @@ public class PlaceholderAPI implements Listener {
 	 * @return true if the hook was successfully registered, false if there was already a hook registered for the specified plugin
 	 */
 	public static boolean registerPlaceholderHook(String plugin, PlaceholderHook placeholderHook) {
+		return registerPlaceholderHook(plugin, placeholderHook, false);
+	}
+	
+	/**
+	 * registers a placeholder hook specific to the plugin specified. Any time a placeholder that matches the plugin name, 
+	 * the method inside of the PlaceholderHook will be called to retrieve a value
+	 * placeholders always follow a specific format - %<plugin>_<identifier>%
+	 * The identifier is passed to the method which will provide the value. It is up to the registering plugin to determine what
+	 * a valid identifier is. If an identifier is unknown, you may return null which specifies the placeholder is invalid.
+	 * @param plugin Plugin registering the placeholder hook
+	 * @param placeholderHook PlaceholderHook class that contains the override method which is called when a value is needed for the specific plugins placeholder
+	 * @param isInternalHook true if hook was registered by PlaceholderAPI internally, false if an external plugin is registering the placeholder hook
+	 * this value should only be true if PlaceholderAPI is registering the PlaceholderHook
+	 * @return true if the hook was successfully registered, false if there was already a hook registered for the specified plugin
+	 */
+	public static boolean registerPlaceholderHook(Plugin plugin, PlaceholderHook placeholderHook, boolean isInternalHook) {
+		
+		if (plugin == null) {
+			return false;
+		}
+		
+		return registerPlaceholderHook(plugin.getName(), placeholderHook, isInternalHook);
+	}
+	
+	/**
+	 * registers a placeholder hook specific to the plugin name specified. Any time a placeholder that matches the plugin name, 
+	 * the method inside of the PlaceholderHook will be called to retrieve a value
+	 * placeholders always follow a specific format - %<plugin>_<identifier>%
+	 * The identifier is passed to the method which will provide the value. It is up to the registering plugin to determine what
+	 * a valid identifier is. If an identifier is unknown, you may return null which specifies the placeholder is invalid.
+	 * @param plugin Plugin name registering the placeholder hook
+	 * @param placeholderHook PlaceholderHook class that contains the override method which is called when a value is needed for the specific plugins placeholder
+	 * 	 * @param isInternalHook true if hook was registered by PlaceholderAPI internally, false if an external plugin is registering the placeholder hook
+	 * this value should only be true if PlaceholderAPI is registering the PlaceholderHook
+	 * @return true if the hook was successfully registered, false if there was already a hook registered for the specified plugin
+	 */
+	public static boolean registerPlaceholderHook(String plugin, PlaceholderHook placeholderHook, boolean isInternalHook) {
 		
 		if (placeholders == null ) {
 			placeholders = new HashMap<String, PlaceholderHook>();
@@ -93,6 +146,17 @@ public class PlaceholderAPI implements Listener {
 		}
 
 		placeholders.put(plugin, placeholderHook);
+		
+		if (!isInternalHook) {
+			if (externalHooks == null) {
+				externalHooks = new HashSet<String>();
+			}
+		
+			if (!externalHooks.contains(plugin)) {
+				externalHooks.add(plugin);
+			}
+		}
+		
 		return true;
 	}
 
@@ -107,11 +171,7 @@ public class PlaceholderAPI implements Listener {
 			return false;
 		}
 		
-		if (placeholders == null || placeholders.isEmpty()) {
-			return false;
-		}
-		
-		return placeholders.remove(plugin.getName()) != null;
+		return unregisterPlaceholderHook(plugin.getName());
 	}
 	
 	/**
@@ -127,6 +187,10 @@ public class PlaceholderAPI implements Listener {
 		
 		if (placeholders == null || placeholders.isEmpty()) {
 			return false;
+		}
+		
+		if (externalHooks != null && externalHooks.contains(plugin)) {
+			externalHooks.remove(plugin);
 		}
 		
 		return placeholders.remove(plugin) != null;
@@ -145,8 +209,17 @@ public class PlaceholderAPI implements Listener {
 		return new HashSet<String>(placeholders.keySet());
 	}
 	
-	public void unregisterAll() {
-		placeholders = null;
+	/**
+	 * obtain the names of every external hook that was not registered by PlaceholderAPI
+	 * @return Set of plugin names that PlaceholderAPI did not register placeholders for
+	 */
+	public static Set<String> getExternalPlaceholderPlugins() {
+		
+		if (externalHooks == null || externalHooks.isEmpty()) {
+			return new HashSet<String>();
+		}
+		
+		return new HashSet<String>(externalHooks);
 	}
 	
 	/**
@@ -172,6 +245,60 @@ public class PlaceholderAPI implements Listener {
 			temp.add(setPlaceholders(p, line));
 		}
 		return temp;
+	}
+	
+	public static boolean containsPlaceholders(String text) {
+
+		if (text == null || placeholders == null || placeholders.isEmpty()) {
+			return false;
+		}
+		
+		Matcher placeholderMatcher = PLACEHOLDER_PATTERN.matcher(text);
+		
+		while (placeholderMatcher.find()) {
+			
+			String format = placeholderMatcher.group(1);
+			
+		    StringBuilder pluginBuilder = new StringBuilder();		    
+		    
+		    char[] formatArray = format.toCharArray();
+
+		    int i;
+		    
+		    for (i=0;i<formatArray.length;i++) {
+		    	
+				if (formatArray[i] == '_') {
+					break;
+				} else {   
+		        	
+		        	pluginBuilder.append(formatArray[i]);
+		        }
+		    }
+		    
+		    String pl = pluginBuilder.toString();
+		    
+		    StringBuilder identifierBuilder = new StringBuilder();
+		    
+			for (int b = i+1;b<formatArray.length;b++) {
+				identifierBuilder.append(formatArray[b]);
+			}
+			
+			String identifier = identifierBuilder.toString();
+			
+			if (identifier.isEmpty()) {
+				identifier = pl;
+			}
+			
+			for (String registered : getRegisteredPlaceholderPlugins()) {
+				
+				if (pl.equalsIgnoreCase(registered)) {
+					
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

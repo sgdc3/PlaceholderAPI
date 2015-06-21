@@ -1,7 +1,7 @@
 package me.clip.placeholderapi.hooks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.util.TimeFormat;
+import me.clip.placeholderapi.util.TimeUtil;
 
 public class Statistic_1_8_1_Placeholders {
 	
@@ -21,17 +23,12 @@ public class Statistic_1_8_1_Placeholders {
 		plugin = i;
 	}
 	
-	private static List<Material> mine_block;
-	private static List<Material> use_item;
-	private static List<Material> break_item;
-	private static List<Material> craft_item;
+	private final Set<Material> mine_block = EnumSet.noneOf(Material.class);
+	private final Set<Material> use_item = EnumSet.noneOf(Material.class);
+	private final Set<Material> break_item = EnumSet.noneOf(Material.class);
+	private final Set<Material> craft_item = EnumSet.noneOf(Material.class);
 
 	public void hook() {
-		
-		mine_block = new ArrayList<Material>();
-		use_item = new ArrayList<Material>();
-		break_item = new ArrayList<Material>();
-		craft_item = new ArrayList<Material>();
 		
 		for (Material m : Material.values()) {
 			if (CraftStatistic.getMaterialStatistic(Statistic.MINE_BLOCK, m) != null) {
@@ -210,7 +207,15 @@ public class Statistic_1_8_1_Placeholders {
 				case "days_played":
 					return String.valueOf((((p.getStatistic(Statistic.PLAY_ONE_TICK) / 20) / 60) / 60) / 24);
 				case "time_played":
-					return convertSeconds((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20);
+					return TimeUtil.getTime((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20);
+				case "days_played_remaining":
+					return TimeUtil.getRemaining((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20, TimeFormat.DAYS);
+				case "hours_played_remaining":
+					return TimeUtil.getRemaining((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20, TimeFormat.HOURS);
+				case "minutes_played_remaining":
+					return TimeUtil.getRemaining((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20, TimeFormat.MINUTES);
+				case "seconds_played_remaining":
+					return TimeUtil.getRemaining((int) p.getStatistic(Statistic.PLAY_ONE_TICK) / 20, TimeFormat.SECONDS);
 				case "animals_bred":
 					return String.valueOf(p.getStatistic(Statistic.ANIMALS_BRED));
 				case "boat_one_cm":
@@ -258,7 +263,7 @@ public class Statistic_1_8_1_Placeholders {
 				case "talked_to_villager":
 					return String.valueOf(p.getStatistic(Statistic.TALKED_TO_VILLAGER));
 				case "time_since_death":
-					return convertSeconds((int) p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20);
+					return TimeUtil.getTime((int) p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20);
 				case "ticks_since_death":
 					return String.valueOf(p.getStatistic(Statistic.TIME_SINCE_DEATH));
 				case "seconds_since_death":
@@ -280,40 +285,11 @@ public class Statistic_1_8_1_Placeholders {
 				return null;
 				}
 
-				});
+				}, true);
 		
 		if (hooked) {
 			plugin.log.info("Spigot 1.8.1 Player statistic placeholders enabled! Note that some statistics might not be available!");
 		}
 	}
 	
-	private static String convertSeconds(int seconds) {
-		
-		final int DAY = 24;
-	    final int HOUR = 60;
-	    final int MINUTE = 60;
-
-	    int minutes = seconds / MINUTE;
-	    seconds -= minutes * MINUTE;
-
-	    int hours = minutes / HOUR;
-	    minutes -= hours * HOUR;
-	    
-	    int days = hours / DAY;
-	    minutes -= days * DAY;
-	    
-	    if (minutes < 1) {
-	    	return seconds+"s";
-	    }
-	    
-	    if (hours < 1) {
-	    	return minutes+"m "+seconds+"s";
-	    }
-
-	    if (days < 1) {
-	    	return hours+"h "+minutes+"m "+seconds+"s";
-	    }
-	    
-	    return days+"d "+hours+"h "+minutes+"m "+seconds+"s";
-	}
 }

@@ -10,6 +10,7 @@ import me.clip.placeholderapi.hooks.AutoRankHook;
 import me.clip.placeholderapi.hooks.AutoSellHook;
 import me.clip.placeholderapi.hooks.ChatReactionHook;
 import me.clip.placeholderapi.hooks.CheckNameHistoryHook;
+import me.clip.placeholderapi.hooks.DeluxeTagsHook;
 import me.clip.placeholderapi.hooks.EZBlocksHook;
 import me.clip.placeholderapi.hooks.EZPrestigeHook;
 import me.clip.placeholderapi.hooks.EZRanksLiteHook;
@@ -23,6 +24,8 @@ import me.clip.placeholderapi.hooks.JobsHook;
 import me.clip.placeholderapi.hooks.KillStatsHook;
 import me.clip.placeholderapi.hooks.LWCHook;
 import me.clip.placeholderapi.hooks.MarriageMasterHook;
+import me.clip.placeholderapi.hooks.McInfectedHook;
+import me.clip.placeholderapi.hooks.McInfectedRanksHook;
 import me.clip.placeholderapi.hooks.McMMOHook;
 import me.clip.placeholderapi.hooks.NickyHook;
 import me.clip.placeholderapi.hooks.PlayerPlaceholders;
@@ -35,13 +38,16 @@ import me.clip.placeholderapi.hooks.QuickSellHook;
 import me.clip.placeholderapi.hooks.RoyalCommandsHook;
 import me.clip.placeholderapi.hooks.SQLPermsHook;
 import me.clip.placeholderapi.hooks.SQLTokensHook;
+import me.clip.placeholderapi.hooks.ServerPlaceholders;
 import me.clip.placeholderapi.hooks.SimpleClansHook;
 import me.clip.placeholderapi.hooks.SimpleCoinsAPIHook;
+import me.clip.placeholderapi.hooks.SimplePrefixHook;
 import me.clip.placeholderapi.hooks.SimpleSuffixHook;
 import me.clip.placeholderapi.hooks.SkyWarsReloadedHook;
 import me.clip.placeholderapi.hooks.Statistic_1_7_10_Placeholders;
 import me.clip.placeholderapi.hooks.Statistic_1_8_1_Placeholders;
 import me.clip.placeholderapi.hooks.Statistic_1_8_3_Placeholders;
+import me.clip.placeholderapi.hooks.Statistic_1_8_4_Placeholders;
 import me.clip.placeholderapi.hooks.TeamsHook;
 import me.clip.placeholderapi.hooks.TokenEnchantHook;
 import me.clip.placeholderapi.hooks.TownyHook;
@@ -52,6 +58,8 @@ import me.clip.placeholderapi.hooks.WickedSkywarsHook;
 import me.clip.placeholderapi.metricslite.MetricsLite;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -123,7 +131,8 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		}
 	}
 	
-	protected void reloadConf() {
+	protected void reloadConf(CommandSender s) {
+		
 		reloadConfig();
 		saveConfig();
 		
@@ -144,6 +153,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		} catch (Exception e) {
 			dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 		}
+		
+		api.resetInternalPlaceholderHooks();
+		
+		s.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" &aplaceholder hooks successfully registered!"));
 	}
 
 	@Override
@@ -156,18 +169,39 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		new PlayerPlaceholders(this).hook();
 		
-		String version = Bukkit.getBukkitVersion();
+		new ServerPlaceholders(this).hook();
 		
 		if (getConfig().getBoolean("hooks.minecraft_statistics")) {
-			if (version.startsWith("1.8.3")) {
-				new Statistic_1_8_3_Placeholders(this).hook();
-			} else if (version.startsWith("1.8")) {
-				new Statistic_1_8_1_Placeholders(this).hook();
-			}  else if (version.startsWith("1.7")) {
-				new Statistic_1_7_10_Placeholders(this).hook();
-			} else {
-				getLogger().warning("Statistic placeholders are not available for your server version!");
-			}
+			
+			String version;
+			
+			try {
+				
+				version = Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
+				
+				if (version.equals("v1_7_R4")) {
+					
+					new Statistic_1_7_10_Placeholders(this).hook();
+					
+				} else if (version.equals("v1_8_R1")) {
+					
+					new Statistic_1_8_1_Placeholders(this).hook();
+					
+				} else if (version.equals("v1_8_R2")) {
+					
+					new Statistic_1_8_3_Placeholders(this).hook();
+					
+				} else if (version.equals("v1_8_R3")) {
+					
+					new Statistic_1_8_4_Placeholders(this).hook();
+					
+				} else {
+					getLogger().warning("Statistic placeholders are not available for your server version!");
+				}
+				
+	        } catch (ArrayIndexOutOfBoundsException ex) {
+	        	getLogger().warning("Statistic placeholders are not available for your server version!");
+	        }
 		}
 		
 		if (getConfig().getBoolean("hooks.acidisland")) {
@@ -190,6 +224,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.checknamehistory")) {
 			new CheckNameHistoryHook(this).hook();
+		}
+
+		if (getConfig().getBoolean("hooks.deluxetags")) {
+			new DeluxeTagsHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.essentials")) {
@@ -245,6 +283,14 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 			new MarriageMasterHook(this).hook();
 		}
 		
+		if (getConfig().getBoolean("hooks.mcinfected")) {
+			new McInfectedHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.mcinfected-ranks")) {
+			new McInfectedRanksHook(this).hook();
+		}
+		
 		if (getConfig().getBoolean("hooks.mcmmo")) {
 			new McMMOHook(this).hook();
 		}
@@ -287,6 +333,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.simplecoinsapi")) {
 			new SimpleCoinsAPIHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.simpleprefix")) {
+			new SimplePrefixHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.simple_suffix")) {

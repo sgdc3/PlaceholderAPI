@@ -40,7 +40,7 @@ public class SQLTokensHook {
 								return null;
 							}
 
-						});
+						}, true);
 
 				if (hooked) {
 					plugin.log.info("Hooked into SQLTokens for placeholders!");

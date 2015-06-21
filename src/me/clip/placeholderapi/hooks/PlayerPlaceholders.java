@@ -146,7 +146,7 @@ public class PlayerPlaceholders {
 				}
 				return p.getName();
 			}	
-		});	
+		}, true);	
 		
 		if (hooked) {
 			plugin.log.info("Successfully registered player placeholders!");

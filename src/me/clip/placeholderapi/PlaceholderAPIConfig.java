@@ -29,6 +29,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.battlelevels", false);
 		c.addDefault("hooks.chatreaction", false);
 		c.addDefault("hooks.checknamehistory", false);
+		c.addDefault("hooks.deluxetags", false);
 		c.addDefault("hooks.essentials", false);
 		c.addDefault("hooks.ezblocks", false);
 		c.addDefault("hooks.ezprestige", false);
@@ -41,6 +42,8 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.jobs", false);
 		c.addDefault("hooks.killstats", false);
 		c.addDefault("hooks.marriagemaster", false);
+		c.addDefault("hooks.mcinfected", false);
+		c.addDefault("hooks.mcinfected-ranks", false);
 		c.addDefault("hooks.mcmmo", false);
 		c.addDefault("hooks.nicky", false);
 		c.addDefault("hooks.playerpoints", false);
@@ -52,6 +55,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.royalcommands", false);
 		c.addDefault("hooks.simpleclans", false);
 		c.addDefault("hooks.simplecoinsapi", false);
+		c.addDefault("hooks.simpleprefix", false);
 		c.addDefault("hooks.simple_suffix", false);
 		c.addDefault("hooks.skywarsreloaded", false);
 		c.addDefault("hooks.sqlperms", false);

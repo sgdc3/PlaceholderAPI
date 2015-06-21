@@ -38,7 +38,7 @@ public class EZBlocksHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into EZBlocks for placeholders!");

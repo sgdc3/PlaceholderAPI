@@ -98,7 +98,7 @@ public class CheckNameHistoryHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into CheckNameHistory for placeholders!");

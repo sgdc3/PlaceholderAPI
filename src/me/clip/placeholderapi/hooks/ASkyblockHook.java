@@ -57,7 +57,7 @@ public class ASkyblockHook {
 						}
 						return null;
 					}
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into ASkyBlock for placeholders!");

@@ -45,7 +45,7 @@ public class EssentialsHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Essentials for placeholders!");

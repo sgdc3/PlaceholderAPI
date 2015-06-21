@@ -60,7 +60,7 @@ public class AutoRankHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into Autorank for placeholders!");

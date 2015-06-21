@@ -69,7 +69,7 @@ public class SkyWarsReloadedHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.getLogger().info("Successfully hooked into SkyWarsReloaded for placeholders!");

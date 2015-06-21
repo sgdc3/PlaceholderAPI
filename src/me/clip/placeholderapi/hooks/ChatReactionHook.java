@@ -37,7 +37,7 @@ public class ChatReactionHook {
 						return null;
 					}
 					
-				});
+				}, true);
 				
 				if (hooked) {
 					plugin.log.info("Hooked into ChatReaction for placeholders!");
