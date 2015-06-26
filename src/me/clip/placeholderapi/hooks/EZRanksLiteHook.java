@@ -1,6 +1,7 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.ezrankslite.EZRanksLite;
+import me.clip.ezrankslite.multipliers.CostHandler;
 import me.clip.ezrankslite.rankdata.Rankup;
 import me.clip.ezrankslite.util.EcoUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -32,26 +33,181 @@ public class EZRanksLiteHook {
 							ezr, new PlaceholderHook() {
 
 								@Override
-								public String onPlaceholderRequest(Player p,
-										String identifier) {
-
+								public String onPlaceholderRequest(Player p, String identifier) {
+									
+									Rankup r = Rankup.getRankup(p);
+									
+									String replacement = null;
+									
+									double cost = 0.0;
+									
 									switch (identifier) {
 
-									case "balance":
-										return getBalance(p);
+									case "player":
+										replacement = p.getName();
+										break;
+									case "displayname":
+										replacement = p.getDisplayName();
+										break;
+									case "world":
+										replacement = p.getWorld().getName();
+										break;
 									case "rank":
-										return getRank(p);
-									case "rankprefix":
-										return getRankPrefix(p);
+									case "rankfrom":
+									case "currentrank":
+										replacement = r != null && r.getRank() != null ? r.getRank()
+												: Rankup.isLastRank(p) && Rankup.getLastRank() != null
+														&& Rankup.getLastRank().getRank() != null ? Rankup
+														.getLastRank().getRank() : EZRanksLite.get().getPerms()
+														.getPrimaryGroup(p) != null ? EZRanksLite.get().getPerms()
+														.getPrimaryGroup(p) : "unknown";
+										break;
 									case "nextrank":
-										return getNextRank(p);
-									case "nextrankprefix":
-										return getNextRankPrefix(p);
-									case "rankupcost":
-										return getNextRankCost(p);
-									}
+									case "rankto":
+									case "rankup":
+										replacement = r != null && r.getRankup() != null ? r
+												.getRankup() : "none";
+										break;
+									case "cost":
 
-									return null;
+										
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										long send = (long) cost;
+
+										replacement = String.valueOf(send);
+										break;
+									case "cost_formatted":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = EcoUtil.fixMoney(cost);
+										break;
+									case "difference":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = String.valueOf(EcoUtil.getDifference(EZRanksLite.get().getEconomy().getBalance(p), cost));
+										break;
+									case "difference_formatted":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = EcoUtil.fixMoney(EcoUtil.getDifference(EZRanksLite.get().getEconomy().getBalance(p), cost));
+										break;
+									case "progress":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = String.valueOf(EcoUtil.getProgress(EZRanksLite.get().getEconomy().getBalance(p), cost));
+										break;
+									case "progressbar":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = EcoUtil.getProgressBar(EcoUtil.getProgressInt(EZRanksLite.get().getEconomy().getBalance(p), cost));
+										break;
+									case "progressexact":
+
+										if (r != null) {
+
+											cost = r.getCost();
+
+											cost = CostHandler.getMultiplier(p, cost);
+
+											cost = CostHandler.getDiscount(p, cost);
+										}
+
+										replacement = EcoUtil.getProgressExact(EZRanksLite.get().getEconomy().getBalance(p), cost);
+										break;
+									case "balance":
+										replacement = String.valueOf(EZRanksLite.get().getEconomy().getBalance(p));
+										break;
+									case "balance_formatted":
+										replacement = EcoUtil.fixMoney(EZRanksLite.get().getEconomy().getBalance(p));
+										break;
+									case "rankprefix":
+									case "rank_prefix":
+										replacement = r != null && r.getPrefix() != null ? r
+												.getPrefix() : Rankup.isLastRank(p)
+												&& Rankup.getLastRank() != null
+												&& Rankup.getLastRank().getPrefix() != null ? Rankup
+												.getLastRank().getPrefix() : "";
+										break;
+									case "lastrank":
+									case "last_rank":
+										replacement = Rankup.getLastRank() != null
+												&& Rankup.getLastRank().getRank() != null ? Rankup
+												.getLastRank().getRank() : "";
+										break;
+									case "lastrank_prefix":
+									case "lastrankprefix":
+										replacement = Rankup.getLastRank() != null
+												&& Rankup.getLastRank().getPrefix() != null ? Rankup
+												.getLastRank().getPrefix() : "";
+										break;
+									case "rankupprefix":
+									case "rankup_prefix":
+										if (r == null) {
+											replacement = "";
+											break;
+										}
+										if (Rankup.getRankup(r.getRankup()) == null) {
+											replacement = Rankup.getLastRank() != null
+													&& Rankup.getLastRank().getPrefix() != null ? Rankup
+													.getLastRank().getPrefix() : "";
+											break;
+										}
+
+										replacement = Rankup.getRankup(r.getRankup()).getPrefix() != null ? Rankup
+												.getRankup(r.getRankup()).getPrefix() : "";
+										break;
+									}
+									
+									return replacement;
 								}
 							}, true);
 
@@ -63,61 +219,5 @@ public class EZRanksLiteHook {
 				}
 			}
 		}
-	}
-	
-	private String getRankPrefix(Player p) {
-		if (Rankup.getRankup(p)== null) {
-			
-			if (Rankup.isLastRank(p)) {
-				return Rankup.getLastRank().getPrefix();
-			}
-			
-			return "";
-		}
-		return Rankup.getRankup(p).getPrefix();
-	}
-	
-	private String getRank(Player p) {
-		if (Rankup.getRankup(p) == null) {
-			if (Rankup.isLastRank(p)) {
-				return Rankup.getLastRank().getRank();
-			}
-			return "";
-		}
-		return Rankup.getRankup(p).getRank();
-	}
-	
-	private String getNextRank(Player p) {
-		if (Rankup.getRankup(p) == null) {
-			return "";
-		}
-		
-		return Rankup.getRankup(p).getRankup();
-	}
-	
-	private String getNextRankCost(Player p) {
-		if (Rankup.getRankup(p) == null) {
-			return "";
-		}
-		
-		return EcoUtil.fixMoney(Rankup.getRankup(p).getCost());
-	}
-	
-	private String getNextRankPrefix(Player p) {
-		if (Rankup.getRankup(p) == null) {
-			return "";
-		}
-		
-		String rank = Rankup.getRankup(p).getRankup();
-		
-		if (Rankup.getRankup(rank) == null) {
-			return "";
-		}
-		
-		return Rankup.getRankup(rank).getPrefix();
-	}
-	
-	private String getBalance(Player p) {
-		return EcoUtil.fixMoney(EZRanksLite.get().getEconomy().getBalance(p));
 	}
 }
