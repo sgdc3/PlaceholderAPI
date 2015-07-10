@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.worldcretornica.plotme_core.Plot;
+import com.worldcretornica.plotme_core.PlotId;
 import com.worldcretornica.plotme_core.PlotMeCoreManager;
-import com.worldcretornica.plotme_core.bukkit.api.BukkitLocation;
+import com.worldcretornica.plotme_core.api.Location;
+import com.worldcretornica.plotme_core.bukkit.BukkitUtil;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
@@ -34,9 +36,9 @@ public class PlotMeHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 						
-						BukkitLocation location = new BukkitLocation(p.getLocation());
+						Location location = BukkitUtil.adapt(p.getLocation());
 						
-						if (!api.isPlotWorld(location)) {
+						if (location == null || !api.isPlotWorld(location)) {
 							switch (identifier){
 							
 							case "in_plot":
@@ -50,7 +52,7 @@ public class PlotMeHook {
 							}
 						}
 						
-						String id = api.getPlotId(location);
+						PlotId id = api.getPlotId(location);
 						
 						if (id == null) {
 							if (identifier.equals("in_plot")) {
@@ -64,7 +66,7 @@ public class PlotMeHook {
 							}
 						}
 						
-						Plot plot = api.getMap(location).getPlot(id);
+						Plot plot = api.getPlot(location);
 						
 						if (plot == null) {
 							return "";
@@ -73,42 +75,50 @@ public class PlotMeHook {
 						switch (identifier){
 						
 						case "current_plot_id":
-							return plot.getId();
+							return plot.getId().getID();
 						case "current_plot_owner":
 							return plot.getOwner();	
 						case "current_plot_owner_uuid":
 							return plot.getOwnerId().toString();	
 						case "current_plot_allowed":
-							return plot.getAllowed();	
+						case "current_plot_is_allowed":
+							return !plot.isDenied(p.getUniqueId()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+						case "current_plot_is_denied":
 						case "current_plot_denied":
-							return plot.getDenied();
+							return plot.isDenied(p.getUniqueId()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
 						case "current_plot_finished_date":
 							return plot.getFinishedDate();
 						case "current_plot_world":
-							return plot.getWorld();
-						case "current_plot_current_bid":
-							return String.valueOf(plot.getCurrentBid());
-						case "current_plot_custom_price":
-							return String.valueOf(plot.getCustomPrice());
+							return p.getWorld().getName();
+						case "current_plot_biome":
+							return plot.getBiome().toString();
+						case "current_plot_likes":
+							return String.valueOf(plot.getLikes());
+						case "current_plot_price":
+							return String.valueOf(plot.getPrice());
 						case "current_plot_expired_date":
 							return plot.getExpiredDate() != null ? 
 									PlaceholderAPIPlugin.getDateFormat().format(plot.getExpiredDate()) : "";
-						case "current_plot_is_allowed":
-							return plot.isAllowed(p.getUniqueId()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
-						case "current_plot_is_allowed_consulting":
-							return plot.isAllowedConsulting(p.getName()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
-						case "current_plot_is_denied":
-							return plot.isDenied(p.getUniqueId()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
-						case "current_plot_is_denied_consulting":
-							return plot.isDeniedConsulting(p.getName()) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+						case "current_plot_is_member":
+							return plot.isMember(p.getUniqueId()).orNull() != null ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+						case "current_get_role":
+							if (plot.isMember(p.getUniqueId()).orNull() == null) {
+								return "";
+							} else {
+								int level = plot.isMember(p.getUniqueId()).get().getLevel();
+								
+								if (level == 0) {
+									return "Member";
+								} else {
+									return "Trusted";
+								}
+							}
 						case "current_plot_is_finished":
 							return plot.isFinished() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
 						case "current_plot_is_for_sale":
 							return plot.isForSale() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
-						case "current_plot_is_protect":
-							return plot.isProtect() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
-						case "current_plot_is_auctioned":
-							return plot.isAuctioned()? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+						case "current_plot_is_protected":
+							return plot.isProtected() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
 						}
 						return null;
 					}

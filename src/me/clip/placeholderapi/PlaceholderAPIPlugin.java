@@ -19,6 +19,7 @@ import me.clip.placeholderapi.hooks.FactionsHook;
 import me.clip.placeholderapi.hooks.FactionsUUIDHook;
 import me.clip.placeholderapi.hooks.GAListenerHook;
 import me.clip.placeholderapi.hooks.GangsPlusHook;
+import me.clip.placeholderapi.hooks.HeroesHook;
 import me.clip.placeholderapi.hooks.IslandWorldHook;
 import me.clip.placeholderapi.hooks.JobsHook;
 import me.clip.placeholderapi.hooks.KillStatsHook;
@@ -28,6 +29,7 @@ import me.clip.placeholderapi.hooks.McInfectedHook;
 import me.clip.placeholderapi.hooks.McInfectedRanksHook;
 import me.clip.placeholderapi.hooks.McMMOHook;
 import me.clip.placeholderapi.hooks.NickyHook;
+import me.clip.placeholderapi.hooks.OnTimeHook;
 import me.clip.placeholderapi.hooks.PlayerPlaceholders;
 import me.clip.placeholderapi.hooks.PlayerPointsHook;
 import me.clip.placeholderapi.hooks.PlotMeHook;
@@ -263,6 +265,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 			new GangsPlusHook(this).hook();
 		}
 		
+		if (getConfig().getBoolean("hooks.heroes")) {
+			new HeroesHook(this).hook();
+		}
+		
 		if (getConfig().getBoolean("hooks.islandworld")) {
 			new IslandWorldHook(this).hook();
 		}
@@ -297,6 +303,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.nicky")) {
 			new NickyHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.ontime")) {
+			new OnTimeHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.playerpoints")) {

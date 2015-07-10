@@ -1,9 +1,9 @@
 package me.clip.placeholderapi.hooks;
 
+import io.loyloy.nicky.Nicky;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.PlaceholderHook;
-import me.nonit.nicky.Nicky;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

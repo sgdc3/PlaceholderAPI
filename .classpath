@@ -58,5 +58,7 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/McInfected.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/McInfected-Ranks.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/EZRanksLite.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Heroes.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/OnTime.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

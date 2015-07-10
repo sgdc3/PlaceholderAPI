@@ -23,8 +23,13 @@ public class ServerPlaceholders {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 
-						if (identifier.equals("online")) {
+						switch(identifier) {
+						
+						case "online":
 							return String.valueOf(Bukkit.getOnlinePlayers().size());
+						case "unique_joins":
+							return String.valueOf(Bukkit.getOfflinePlayers().length);
+						
 						}
 
 						return null;

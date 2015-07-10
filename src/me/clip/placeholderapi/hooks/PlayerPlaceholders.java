@@ -47,7 +47,8 @@ public class PlayerPlaceholders {
 					return p.getName();
 				case "displayname":
 					return p.getDisplayName();
-				
+				case "uuid":
+					return p.getUniqueId().toString();
 				case "gamemode":
 					return p.getGameMode().name();
 				case "world":

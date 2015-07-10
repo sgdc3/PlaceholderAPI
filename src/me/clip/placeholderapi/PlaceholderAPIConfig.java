@@ -38,6 +38,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.factions_uuid", false);
 		c.addDefault("hooks.galistener", false);
 		c.addDefault("hooks.gangsplus", false);
+		c.addDefault("hooks.heroes", false);
 		c.addDefault("hooks.islandworld", false);
 		c.addDefault("hooks.jobs", false);
 		c.addDefault("hooks.killstats", false);
@@ -46,6 +47,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.mcinfected-ranks", false);
 		c.addDefault("hooks.mcmmo", false);
 		c.addDefault("hooks.nicky", false);
+		c.addDefault("hooks.ontime", false);
 		c.addDefault("hooks.playerpoints", false);
 		c.addDefault("hooks.plotme", false);
 		c.addDefault("hooks.plotsquared", false);
