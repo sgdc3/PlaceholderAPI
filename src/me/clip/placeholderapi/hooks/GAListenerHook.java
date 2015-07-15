@@ -30,6 +30,11 @@ public class GAListenerHook {
 
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
+						
+						if (p == null) {
+							return "";
+						}
+						
 						if (identifier.equals("votes")) {
 							return getVotes(p);
 						}

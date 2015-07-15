@@ -35,6 +35,10 @@ public class EZRanksLiteHook {
 								@Override
 								public String onPlaceholderRequest(Player p, String identifier) {
 									
+									if (p == null) {
+										return "";
+									}
+									
 									Rankup r = Rankup.getRankup(p);
 									
 									String replacement = null;

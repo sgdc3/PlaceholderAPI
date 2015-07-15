@@ -36,6 +36,10 @@ public class AcidIslandHook {
 							return null;
 						}
 						
+						if (p == null) {
+							return "";
+						}
+						
 						switch (identifier) {
 						
 						case "level":

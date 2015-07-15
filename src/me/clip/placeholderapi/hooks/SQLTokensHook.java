@@ -33,6 +33,11 @@ public class SQLTokensHook {
 
 							@Override
 							public String onPlaceholderRequest(Player p, String identifier) {
+								
+								if (p == null) {
+									return "";
+								}
+								
 								if (identifier.equals("tokens")) {
 									
 									return getTokens(p);

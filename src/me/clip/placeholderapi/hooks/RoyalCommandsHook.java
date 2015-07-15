@@ -24,7 +24,14 @@ public class RoyalCommandsHook {
 
 						@Override
 						public String onPlaceholderRequest(Player p, String identifier) {
+							
+							if (p == null) {
+								return "";
+							}
+							
 							switch (identifier) {
+							
+							
 
 							case "nickname":
 								return RoyalCommands.instance.getAPI().getPlayerAPI().getDisplayName(p);

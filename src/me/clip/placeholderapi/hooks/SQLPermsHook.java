@@ -32,6 +32,11 @@ public class SQLPermsHook {
 
 							@Override
 							public String onPlaceholderRequest(Player p, String identifier) {
+								
+								if (p == null) {
+									return "";
+								}
+								
 								if (identifier.contains("rank_")) {
 									
 									String channel = identifier.split("rank_")[1];

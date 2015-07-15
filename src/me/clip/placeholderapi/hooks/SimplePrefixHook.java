@@ -28,9 +28,15 @@ public class SimplePrefixHook {
 
 				boolean hooked = PlaceholderAPI.registerPlaceholderHook(
 						simpleprefix, new PlaceholderHook() {
+							
 
 							@Override
 							public String onPlaceholderRequest(Player p, String identifier) {
+								
+								if (p == null) {
+									return "";
+								}
+								
 								if (identifier.equals("prefix")) {
 									return getPrefixSuffix(p, "prefix");
 								} else if (identifier.equals("suffix")) {

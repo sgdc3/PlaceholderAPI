@@ -33,6 +33,10 @@ public class CheckNameHistoryHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 						
+						if (p == null) {
+							return "";
+						}
+						
 				        Map<String, Date> map = CheckNameHistory.getPreviousNamesWithDates(p.getName(), false);
 				        
 				        if (map == null || map.size() == 0) {

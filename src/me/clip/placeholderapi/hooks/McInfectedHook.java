@@ -26,6 +26,11 @@ public class McInfectedHook {
 
 				@Override
 				public String onPlaceholderRequest(Player p, String identifier) {
+					
+					if (p == null) {
+						return "";
+					}
+					
 					switch (identifier) {
 
 					case "score":

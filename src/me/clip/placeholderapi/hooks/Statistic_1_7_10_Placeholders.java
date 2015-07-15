@@ -49,6 +49,10 @@ public class Statistic_1_7_10_Placeholders {
 
 			@Override
 			public String onPlaceholderRequest(Player p, String identifier) {
+				
+				if (p == null) {
+					return "";
+				}
 
 				if (identifier.contains("mine_block_")) {
 					

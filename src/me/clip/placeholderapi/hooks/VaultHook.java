@@ -55,6 +55,10 @@ public class VaultHook {
 
 							@Override
 							public String onPlaceholderRequest(Player p, String identifier) {
+								
+								if (p == null) {
+									return "";
+								}
 
 								if (identifier.equals("balance")) {
 									return String.valueOf(getBalance(p));

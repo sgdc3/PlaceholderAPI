@@ -36,6 +36,10 @@ public class ASkyblockHook {
 							return null;
 						}
 						
+						if (p == null) {
+							return "";
+						}
+						
 						switch (identifier) {
 						
 						case "level":

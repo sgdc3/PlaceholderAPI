@@ -27,6 +27,10 @@ public class DeluxeTagsHook {
 						@Override
 						public String onPlaceholderRequest(Player p, String s) {
 
+							if (p == null) {
+								return "";
+							}
+							
 							switch (s) {
 
 							case "tag":

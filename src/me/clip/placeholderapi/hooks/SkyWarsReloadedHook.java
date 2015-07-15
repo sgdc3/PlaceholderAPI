@@ -29,6 +29,10 @@ public class SkyWarsReloadedHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 						
+						if (p == null) {
+							return "";
+						}
+						
 						GamePlayer pl = SkyWarsReloaded.getPC().getPlayer(p.getUniqueId());
 						
 						if (pl == null) {

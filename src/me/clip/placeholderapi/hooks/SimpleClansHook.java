@@ -38,6 +38,10 @@ public class SimpleClansHook {
 								@Override
 								public String onPlaceholderRequest(Player p, String identifier) {
 									
+									if (p == null) {
+										return "";
+									}
+									
 									ClanPlayer player = clanManager.getClanPlayer(p);
 									
 									if (player == null) {

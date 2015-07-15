@@ -36,6 +36,10 @@ public class PlotMeHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 						
+						if (p == null) {
+							return "";
+						}
+						
 						Location location = BukkitUtil.adapt(p.getLocation());
 						
 						if (location == null || !api.isPlotWorld(location)) {

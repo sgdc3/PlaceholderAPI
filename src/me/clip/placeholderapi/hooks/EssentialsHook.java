@@ -30,8 +30,15 @@ public class EssentialsHook {
 				
 				boolean hooked = PlaceholderAPI.registerPlaceholderHook(essentials, new PlaceholderHook() {
 
+					
+					
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
+						
+						if (p == null) {
+							return "";
+						}
+						
 						switch (identifier) {
 						
 						case "nickname":

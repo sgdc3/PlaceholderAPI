@@ -30,6 +30,10 @@ public class ChatReactionHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 						
+						if (p == null) {
+							return "";
+						}
+						
 						if (identifier.equals("wins")) {
 							return String.valueOf(ReactionAPI.getWins(p));
 						}

@@ -25,6 +25,9 @@ public class PlayerPlaceholders {
 			@Override
 			public String onPlaceholderRequest(Player p, String identifier) {
 				
+				if (p == null) {
+					return "";
+				}
 				
 				if (identifier.startsWith("has_permission_")) {
 					

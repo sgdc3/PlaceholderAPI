@@ -33,6 +33,10 @@ public class AutoSellHook {
 					@Override
 					public String onPlaceholderRequest(Player p, String identifier) {
 
+						if (p == null) {
+							return "";
+						}
+						
 						// %autosell_current_shop%
 						switch (identifier) {
 	

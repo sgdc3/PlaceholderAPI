@@ -29,6 +29,10 @@ public class McMMOHook {
 				@Override
 				public String onPlaceholderRequest(Player p, String identifier) {
 					
+					if (p == null) {
+						return "";
+					}
+					
 					McMMOPlayer player = UserManager.getPlayer(p);
 					
 					if (player == null) {

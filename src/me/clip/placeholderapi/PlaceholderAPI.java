@@ -247,6 +247,58 @@ public class PlaceholderAPI implements Listener {
 		return temp;
 	}
 	
+	/**
+	 * check if a String contains placeholders which do not require a Player object to be passed to the setPlaceholders method
+	 * @param text String to check
+	 * @return true if text contains server related placeholders which do not require a Player object
+	 */
+	public static boolean containsServerPlaceholders(String text) {
+		
+		if (text == null || placeholders == null || placeholders.isEmpty()) {
+			return false;
+		}
+		
+		Matcher placeholderMatcher = PLACEHOLDER_PATTERN.matcher(text);
+		
+		boolean containsServer = false;
+		
+		while (placeholderMatcher.find()) {
+			
+			String format = placeholderMatcher.group(1);
+			
+		    StringBuilder pluginBuilder = new StringBuilder();		    
+		    
+		    char[] formatArray = format.toCharArray();
+
+		    int i;
+		    
+		    for (i=0;i<formatArray.length;i++) {
+		    	
+				if (formatArray[i] == '_') {
+					break;
+				} else {   
+		        	
+		        	pluginBuilder.append(formatArray[i]);
+		        }
+		    }
+		    
+		    String pl = pluginBuilder.toString();
+			
+			containsServer = pl.equalsIgnoreCase("server");
+			
+			if (containsServer) {
+				break;
+			}
+		}
+
+		return containsServer;
+	}
+	
+	/**
+	 * check if a String contains any valid PlaceholderAPI placeholders
+	 * @param text String to check 
+	 * @return true if String passed contains any valid PlaceholderAPI placeholder identifiers, false otherwise
+	 */
 	public static boolean containsPlaceholders(String text) {
 
 		if (text == null || placeholders == null || placeholders.isEmpty()) {
@@ -314,6 +366,58 @@ public class PlaceholderAPI implements Listener {
 		}
 		
 		Matcher placeholderMatcher = PLACEHOLDER_PATTERN.matcher(text);
+		
+		if (player == null) {			
+			
+			while (placeholderMatcher.find()) {
+				
+				String format = placeholderMatcher.group(1);
+				
+			    StringBuilder pluginBuilder = new StringBuilder();		    
+			    
+			    char[] formatArray = format.toCharArray();
+
+			    int i;
+			    
+			    for (i=0;i<formatArray.length;i++) {
+			    	
+					if (formatArray[i] == '_') {
+						break;
+					} else {   
+			        	
+			        	pluginBuilder.append(formatArray[i]);
+			        }
+			    }
+			    
+			    String pl = pluginBuilder.toString();
+			    
+			    StringBuilder identifierBuilder = new StringBuilder();
+			    
+				for (int b = i+1;b<formatArray.length;b++) {
+					identifierBuilder.append(formatArray[b]);
+				}
+				
+				String identifier = identifierBuilder.toString();
+				
+				if (identifier.isEmpty()) {
+					identifier = pl;
+				}
+				
+				for (String registered : getRegisteredPlaceholderPlugins()) {
+					
+					if (pl.equalsIgnoreCase("server")) {
+						
+						String value = getPlaceholders().get(registered).onPlaceholderRequest(player, identifier);
+						
+						if (value != null) {
+							text = text.replaceAll("%"+format+"%", Matcher.quoteReplacement(value));
+						}
+					}
+				}
+			}
+			
+			return ChatColor.translateAlternateColorCodes('&', text);
+		}
 		
 		while (placeholderMatcher.find()) {
 			
