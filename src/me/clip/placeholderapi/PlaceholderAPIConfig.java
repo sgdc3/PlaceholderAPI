@@ -46,6 +46,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.mcinfected", false);
 		c.addDefault("hooks.mcinfected-ranks", false);
 		c.addDefault("hooks.mcmmo", false);
+		c.addDefault("hooks.minecrates", false);
 		c.addDefault("hooks.nicky", false);
 		c.addDefault("hooks.ontime", false);
 		c.addDefault("hooks.playerpoints", false);
@@ -69,6 +70,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.ultimatevotes", false);
 		c.addDefault("hooks.vault_perms", true);
 		c.addDefault("hooks.vault_eco", true);
+		c.addDefault("hooks.voteparty", true);
 		c.addDefault("hooks.wickedskywars", false);
 		c.options().copyDefaults(true);
 		plugin.saveConfig();

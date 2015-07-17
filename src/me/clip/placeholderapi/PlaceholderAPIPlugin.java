@@ -28,6 +28,7 @@ import me.clip.placeholderapi.hooks.MarriageMasterHook;
 import me.clip.placeholderapi.hooks.McInfectedHook;
 import me.clip.placeholderapi.hooks.McInfectedRanksHook;
 import me.clip.placeholderapi.hooks.McMMOHook;
+import me.clip.placeholderapi.hooks.MineCratesHook;
 import me.clip.placeholderapi.hooks.NickyHook;
 import me.clip.placeholderapi.hooks.OnTimeHook;
 import me.clip.placeholderapi.hooks.PlayerPlaceholders;
@@ -56,6 +57,7 @@ import me.clip.placeholderapi.hooks.TownyHook;
 import me.clip.placeholderapi.hooks.USkyblockHook;
 import me.clip.placeholderapi.hooks.UltimateVotesHook;
 import me.clip.placeholderapi.hooks.VaultHook;
+import me.clip.placeholderapi.hooks.VotePartyHook;
 import me.clip.placeholderapi.hooks.WickedSkywarsHook;
 import me.clip.placeholderapi.metricslite.MetricsLite;
 
@@ -301,6 +303,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 			new McMMOHook(this).hook();
 		}
 		
+		if (getConfig().getBoolean("hooks.minecrates")) {
+			new MineCratesHook(this).hook();
+		}
+		
 		if (getConfig().getBoolean("hooks.nicky")) {
 			new NickyHook(this).hook();
 		}
@@ -386,6 +392,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		}
 		
 		new VaultHook(this).hook();
+		
+		if (getConfig().getBoolean("hooks.voteparty")) {
+			new VotePartyHook(this).hook();
+		}
 
 		if (getConfig().getBoolean("hooks.wickedskywars")) {
 			new WickedSkywarsHook(this).hook();
