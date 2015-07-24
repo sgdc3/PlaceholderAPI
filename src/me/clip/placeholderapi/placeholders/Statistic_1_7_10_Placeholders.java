@@ -1,11 +1,11 @@
-package me.clip.placeholderapi.hooks;
+package me.clip.placeholderapi.placeholders;
 
 import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.craftbukkit.v1_8_R1.CraftStatistic;
+import org.bukkit.craftbukkit.v1_7_R4.CraftStatistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,11 @@ import me.clip.placeholderapi.PlaceholderHook;
 import me.clip.placeholderapi.util.TimeFormat;
 import me.clip.placeholderapi.util.TimeUtil;
 
-public class Statistic_1_8_1_Placeholders {
+public class Statistic_1_7_10_Placeholders {
 	
 	private PlaceholderAPIPlugin plugin;
 	
-	public Statistic_1_8_1_Placeholders(PlaceholderAPIPlugin i) {
+	public Statistic_1_7_10_Placeholders(PlaceholderAPIPlugin i) {
 		plugin = i;
 	}
 	
@@ -226,8 +226,6 @@ public class Statistic_1_8_1_Placeholders {
 					return String.valueOf(p.getStatistic(Statistic.BOAT_ONE_CM));
 				case "climb_one_cm":
 					return String.valueOf(p.getStatistic(Statistic.CLIMB_ONE_CM));
-				case "crouch_one_cm":
-					return String.valueOf(p.getStatistic(Statistic.CROUCH_ONE_CM));
 				case "damage_dealt":
 					return String.valueOf(p.getStatistic(Statistic.DAMAGE_DEALT));
 				case "damage_taken":
@@ -260,26 +258,8 @@ public class Statistic_1_8_1_Placeholders {
 					return String.valueOf(p.getStatistic(Statistic.PIG_ONE_CM));
 				case "player_kills":
 					return String.valueOf(p.getStatistic(Statistic.PLAYER_KILLS));
-				case "sprint_one_cm":
-					return String.valueOf(p.getStatistic(Statistic.SPRINT_ONE_CM));
 				case "swim_one_cm":
 					return String.valueOf(p.getStatistic(Statistic.SWIM_ONE_CM));
-				case "talked_to_villager":
-					return String.valueOf(p.getStatistic(Statistic.TALKED_TO_VILLAGER));
-				case "time_since_death":
-					return TimeUtil.getTime((int) p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20);
-				case "ticks_since_death":
-					return String.valueOf(p.getStatistic(Statistic.TIME_SINCE_DEATH));
-				case "seconds_since_death":
-					return String.valueOf(p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20L);
-				case "minutes_since_death":
-					return String.valueOf((p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20L) / 60L);
-				case "hours_since_death":
-					return String.valueOf(((p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20L) / 60L) / 60L);
-				case "days_since_death":
-					return String.valueOf((((p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20L) / 60L) / 60L) / 24L);
-				case "traded_with_villager":
-					return String.valueOf(p.getStatistic(Statistic.TRADED_WITH_VILLAGER));
 				case "treasure_fished":
 					return String.valueOf(p.getStatistic(Statistic.TREASURE_FISHED));
 				case "walk_one_cm":
@@ -292,8 +272,7 @@ public class Statistic_1_8_1_Placeholders {
 				}, true);
 		
 		if (hooked) {
-			plugin.log.info("Spigot 1.8.1 Player statistic placeholders enabled! Note that some statistics might not be available!");
+			plugin.log.info("Bukkit/Spigot 1.7.10 Player statistic placeholders enabled! Note that some statistics might not be available!");
 		}
 	}
-	
 }

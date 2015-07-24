@@ -1,4 +1,4 @@
-package me.clip.placeholderapi.hooks;
+package me.clip.placeholderapi.placeholders;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;

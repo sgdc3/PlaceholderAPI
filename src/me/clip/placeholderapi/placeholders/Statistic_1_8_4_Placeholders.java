@@ -1,11 +1,11 @@
-package me.clip.placeholderapi.hooks;
+package me.clip.placeholderapi.placeholders;
 
 import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.craftbukkit.v1_8_R2.CraftStatistic;
+import org.bukkit.craftbukkit.v1_8_R3.CraftStatistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,11 @@ import me.clip.placeholderapi.PlaceholderHook;
 import me.clip.placeholderapi.util.TimeFormat;
 import me.clip.placeholderapi.util.TimeUtil;
 
-public class Statistic_1_8_3_Placeholders {
+public class Statistic_1_8_4_Placeholders {
 	
 	private PlaceholderAPIPlugin plugin;
 	
-	public Statistic_1_8_3_Placeholders(PlaceholderAPIPlugin i) {
+	public Statistic_1_8_4_Placeholders(PlaceholderAPIPlugin i) {
 		plugin = i;
 	}
 	
@@ -335,4 +335,6 @@ public class Statistic_1_8_3_Placeholders {
 			plugin.log.info("Spigot 1.8.3 Player statistic placeholders enabled!");
 		}
 	}
+	
+
 }

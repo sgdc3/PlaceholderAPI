@@ -41,7 +41,7 @@ public class USkyblockHook {
 						case "island_level":
 							return String.valueOf(skyblock.getIslandLevel(p));
 						case "island_rank":
-							return String.valueOf(skyblock.getIslandRank(p));
+							return skyblock.getIslandRank(p) != null ? String.valueOf(skyblock.getIslandRank(p).getRank()) : "0";
 						case "biome":
 							return skyblock.getCurrentBiome(p) != null ? skyblock.getCurrentBiome(p) : "";
 						case "is_party_leader":

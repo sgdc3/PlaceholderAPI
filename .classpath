@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Factions.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/FactionsUUID.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/GAListener.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/gangsplus-1.1.8-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MassiveCore.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/IslandWorld.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Jobs2.24.2.jar"/>
@@ -61,5 +60,7 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Heroes.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/OnTime.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MineCrates.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/gangsplus.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EnjinMinecraftPlugin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

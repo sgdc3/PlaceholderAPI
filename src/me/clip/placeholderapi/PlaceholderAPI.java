@@ -46,6 +46,8 @@ public class PlaceholderAPI implements Listener {
 		}
 	}
 	
+
+	
 	protected void resetInternalPlaceholderHooks() {
 		
 		Set<String> registered = getRegisteredPlaceholderPlugins();
@@ -467,5 +469,9 @@ public class PlaceholderAPI implements Listener {
 		}
 
 		return ChatColor.translateAlternateColorCodes('&', text);
+	}
+	
+	public static Pattern getPlaceholderPattern() {
+		return PLACEHOLDER_PATTERN;
 	}
 }

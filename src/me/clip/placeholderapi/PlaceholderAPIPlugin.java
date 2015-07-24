@@ -4,6 +4,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
+import me.clip.placeholderapi.configuration.PlaceholderAPIConfig;
+import me.clip.placeholderapi.placeholders.PlayerPlaceholders;
+import me.clip.placeholderapi.placeholders.JavascriptPlaceholders;
+import me.clip.placeholderapi.placeholders.ServerPlaceholders;
+import me.clip.placeholderapi.placeholders.Statistic_1_7_10_Placeholders;
+import me.clip.placeholderapi.placeholders.Statistic_1_8_1_Placeholders;
+import me.clip.placeholderapi.placeholders.Statistic_1_8_3_Placeholders;
+import me.clip.placeholderapi.placeholders.Statistic_1_8_4_Placeholders;
 import me.clip.placeholderapi.hooks.ASkyblockHook;
 import me.clip.placeholderapi.hooks.AcidIslandHook;
 import me.clip.placeholderapi.hooks.AutoRankHook;
@@ -14,6 +22,7 @@ import me.clip.placeholderapi.hooks.DeluxeTagsHook;
 import me.clip.placeholderapi.hooks.EZBlocksHook;
 import me.clip.placeholderapi.hooks.EZPrestigeHook;
 import me.clip.placeholderapi.hooks.EZRanksLiteHook;
+import me.clip.placeholderapi.hooks.EnjinMinecraftPluginHook;
 import me.clip.placeholderapi.hooks.EssentialsHook;
 import me.clip.placeholderapi.hooks.FactionsHook;
 import me.clip.placeholderapi.hooks.FactionsUUIDHook;
@@ -31,7 +40,6 @@ import me.clip.placeholderapi.hooks.McMMOHook;
 import me.clip.placeholderapi.hooks.MineCratesHook;
 import me.clip.placeholderapi.hooks.NickyHook;
 import me.clip.placeholderapi.hooks.OnTimeHook;
-import me.clip.placeholderapi.hooks.PlayerPlaceholders;
 import me.clip.placeholderapi.hooks.PlayerPointsHook;
 import me.clip.placeholderapi.hooks.PlotMeHook;
 import me.clip.placeholderapi.hooks.PlotSquaredHook;
@@ -41,16 +49,11 @@ import me.clip.placeholderapi.hooks.QuickSellHook;
 import me.clip.placeholderapi.hooks.RoyalCommandsHook;
 import me.clip.placeholderapi.hooks.SQLPermsHook;
 import me.clip.placeholderapi.hooks.SQLTokensHook;
-import me.clip.placeholderapi.hooks.ServerPlaceholders;
 import me.clip.placeholderapi.hooks.SimpleClansHook;
 import me.clip.placeholderapi.hooks.SimpleCoinsAPIHook;
 import me.clip.placeholderapi.hooks.SimplePrefixHook;
 import me.clip.placeholderapi.hooks.SimpleSuffixHook;
 import me.clip.placeholderapi.hooks.SkyWarsReloadedHook;
-import me.clip.placeholderapi.hooks.Statistic_1_7_10_Placeholders;
-import me.clip.placeholderapi.hooks.Statistic_1_8_1_Placeholders;
-import me.clip.placeholderapi.hooks.Statistic_1_8_3_Placeholders;
-import me.clip.placeholderapi.hooks.Statistic_1_8_4_Placeholders;
 import me.clip.placeholderapi.hooks.TeamsHook;
 import me.clip.placeholderapi.hooks.TokenEnchantHook;
 import me.clip.placeholderapi.hooks.TownyHook;
@@ -59,6 +62,7 @@ import me.clip.placeholderapi.hooks.UltimateVotesHook;
 import me.clip.placeholderapi.hooks.VaultHook;
 import me.clip.placeholderapi.hooks.VotePartyHook;
 import me.clip.placeholderapi.hooks.WickedSkywarsHook;
+import me.clip.placeholderapi.javascript.JavascriptPlaceholder;
 import me.clip.placeholderapi.metricslite.MetricsLite;
 
 import org.bukkit.Bukkit;
@@ -166,7 +170,13 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		
+		Bukkit.getScheduler().cancelTasks(this);
+		
 		api.unregisterAll();
+		
+		JavascriptPlaceholders.cleanup();
+		
+		JavascriptPlaceholder.cleanup();
 	}
 	
 	public void initializeHooks() {
@@ -174,6 +184,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		new PlayerPlaceholders(this).hook();
 		
 		new ServerPlaceholders(this).hook();
+		
+		if (getConfig().getBoolean("hooks.javascript_placeholders")) {
+			new JavascriptPlaceholders(this).hook();
+		}
 		
 		if (getConfig().getBoolean("hooks.minecraft_statistics")) {
 			
@@ -232,6 +246,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 
 		if (getConfig().getBoolean("hooks.deluxetags")) {
 			new DeluxeTagsHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.enjinminecraftplugin")) {
+			new EnjinMinecraftPluginHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.essentials")) {

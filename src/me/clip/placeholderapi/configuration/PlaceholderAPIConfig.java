@@ -1,4 +1,6 @@
-package me.clip.placeholderapi;
+package me.clip.placeholderapi.configuration;
+
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -22,6 +24,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("boolean.false", "no");
 		c.addDefault("date_format", "MM/dd/yy HH:mm:ss");
 		c.addDefault("hooks.minecraft_statistics", false);
+		c.addDefault("hooks.javascript_placeholders", false);
 		c.addDefault("hooks.acidisland", false);
 		c.addDefault("hooks.askyblock", false);
 		c.addDefault("hooks.autorank", false);
@@ -30,6 +33,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.chatreaction", false);
 		c.addDefault("hooks.checknamehistory", false);
 		c.addDefault("hooks.deluxetags", false);
+		c.addDefault("hooks.enjinminecraftplugin", false);
 		c.addDefault("hooks.essentials", false);
 		c.addDefault("hooks.ezblocks", false);
 		c.addDefault("hooks.ezprestige", false);
@@ -42,6 +46,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.islandworld", false);
 		c.addDefault("hooks.jobs", false);
 		c.addDefault("hooks.killstats", false);
+		c.addDefault("hooks.lwc", false);
 		c.addDefault("hooks.marriagemaster", false);
 		c.addDefault("hooks.mcinfected", false);
 		c.addDefault("hooks.mcinfected-ranks", false);

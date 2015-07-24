@@ -69,8 +69,7 @@ public class EZRanksLiteHook {
 									case "nextrank":
 									case "rankto":
 									case "rankup":
-										replacement = r != null && r.getRankup() != null ? r
-												.getRankup() : "none";
+										replacement = r != null && r.getRankup() != null ? r.getRankup() : "none";
 										break;
 									case "cost":
 

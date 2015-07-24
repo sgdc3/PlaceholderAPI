@@ -1,4 +1,4 @@
-package me.clip.placeholderapi.hooks;
+package me.clip.placeholderapi.placeholders;
 
 import java.util.Date;
 
@@ -153,7 +153,7 @@ public class PlayerPlaceholders {
 		}, true);	
 		
 		if (hooked) {
-			plugin.log.info("Successfully registered player placeholders!");
+			plugin.log.info("Player placeholders registered!");
 		}
 	}
 }
