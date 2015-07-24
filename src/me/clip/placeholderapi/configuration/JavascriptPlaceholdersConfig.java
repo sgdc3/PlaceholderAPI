@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.placeholders.JavascriptPlaceholders;
 import me.clip.placeholderapi.javascript.JavascriptPlaceholder;
+import me.clip.placeholderapi.javascript.JavascriptReturnType;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,7 +33,12 @@ public class JavascriptPlaceholdersConfig {
 		
 		config.options().header("javascript_placeholders.yml"
 				+ "\nYou can create custom placeholders which utilize javascript to determine the result of the custom placeholder you create."
-				+ "\nAll javascript expressions must return a boolean result otherwise the placeholder will not work correctly."
+				+ "\nYou can specify if the result is based on a boolean or the actual javascript."
+				+ "\n"
+				+ "\nIf you do not specify a type: the placeholder will default to a boolean type"
+				+ "\nA boolean type must contain a true_result: and false_result:"
+				+ "\n"
+				+ "\nA string type only requires the expression: entry"
 				+ "\n"
 				+ "\nJavascript placeholders can contain normal placeholders in the expression, true_result, or false_result"
 				+ "\nThese placeholders will be parsed to the correct values before the expression is evaluated."
@@ -41,29 +47,45 @@ public class JavascriptPlaceholdersConfig {
 				+ "\n"
 				+ "\nJavascript placeholder format:"
 				+ "\n"
+				+ "\n    BOOLEAN TYPE"
 				+ "\n<identifier>:"
 				+ "\n  expression: <expression>"
+				+ "\n  type: 'boolean'"
 				+ "\n  true_result: <result if expression is true>"
 				+ "\n  false_result: <result if expression is false>"
+				+ "\n"
+				+ "\n    STRING TYPE"
+				+ "\n<identifier>:"
+				+ "\n  expression: <expression>"
+				+ "\n  type: 'string'"
 				+ "\n"
 				+ "\nExamples:"
 				+ "\n"
 				+ "\nmillionaire:"
 				+ "\n  expression: '%vaulteco_balance% >= 1000000'"
+				+ "\n  type: 'boolean'"
 				+ "\n  true_result: '&aMillionaire'"
 				+ "\n  false_result: '&cbroke'"
 				+ "\nis_staff:"
 				+ "\n  expression: '\"%vault_group%\" == \"Moderator\" || \"%vault_group%\" == \"Admin\" || \"%vault_group%\" == \"Owner\"'"
+				+ "\n  type: 'boolean'"
 				+ "\n  true_result: '&bStaff'"
-				+ "\n  false_result: '&ePlayer'");
+				+ "\n  false_result: '&ePlayer'"
+				+ "\nhealth_rounded:"
+				+ "\n  expression: 'Math.round(%player_health%)'"
+				+ "\n  type: 'string'");
 		
 		if (config.getKeys(false) == null || config.getKeys(false).isEmpty()) {
 			config.set("millionaire.expression", "%vaulteco_balance% >= 1000000");
+			config.set("millionaire.type", "boolean");
 			config.set("millionaire.true_result", "&aMillionaire");
 			config.set("millionaire.false_result", "&cbroke");
 			config.set("is_staff.expression", "\"%vault_group%\" == \"Moderator\" || \"%vault_group%\" == \"Admin\" || \"%vault_group%\" == \"Owner\"");
+			config.set("is_staff.type", "boolean");
 			config.set("is_staff.true_result", "&bStaff");
 			config.set("is_staff.false_result", "&ePlayer");
+			config.set("health_rounded.expression", "Math.round(%player_health%)");
+			config.set("health_rounded.type", "string");
 		}
 		
 		save();
@@ -96,34 +118,58 @@ public class JavascriptPlaceholdersConfig {
 		
 		for (String identifier : config.getKeys(false)) {
 			
-			if (!isValid(identifier)) {
-				plugin.getLogger().warning("Javascript placeholder " + identifier + " is invalid!");
+			JavascriptReturnType type = JavascriptReturnType.BOOLEAN;
+			
+			if (config.contains(identifier + ".type")) {
+				
+				String t = config.getString(identifier + ".type");
+				
+				if (JavascriptReturnType.getType(t) != null) {
+					type = JavascriptReturnType.getType(t);
+				}
+			}
+			
+			if (!isValid(identifier, type)) {
+				plugin.getLogger().warning("Javascript " + type.getType() + " placeholder " + identifier + " is invalid!");
 				continue;
 			}
 			
+			JavascriptPlaceholder pl = null;
+			
 			String expression = config.getString(identifier + ".expression");
 			
-			String trueResult = config.getString(identifier + ".true_result");
-			
-			String falseResult = config.getString(identifier + ".false_result");
-			
-			JavascriptPlaceholder pl = new JavascriptPlaceholder(identifier, expression, trueResult, falseResult);
+			if (type == JavascriptReturnType.BOOLEAN) {
+				
+				String trueResult = config.getString(identifier + ".true_result");
+				
+				String falseResult = config.getString(identifier + ".false_result");
+				
+				pl = new JavascriptPlaceholder(identifier, type, expression, trueResult, falseResult);
+			} else {
+				
+				pl = new JavascriptPlaceholder(identifier, type, expression, null, null);
+			}
 			
 			boolean added = JavascriptPlaceholders.addJavascriptPlaceholder(pl);
 			
 			if (added) {
-				plugin.getLogger().info("Javascript placeholder %javascript_" + identifier + "% has been loaded!");
+				plugin.getLogger().info("Javascript " + type.getType() + " placeholder %javascript_" + identifier + "% has been loaded!");
 			} else {
-				plugin.getLogger().warning("Javascript placeholder %javascript_" + identifier + "% is a duplicate!");
+				plugin.getLogger().warning("Javascript " + type.getType() + " placeholder %javascript_" + identifier + "% is a duplicate!");
 			}
 		}
 		return JavascriptPlaceholders.getJavascriptPlaceholdersAmount();
 	}
 	
-	private boolean isValid(String identifier) {
-		return config.isString(identifier + ".expression") 
+	private boolean isValid(String identifier, JavascriptReturnType type) {
+		if (type == JavascriptReturnType.BOOLEAN) {
+			return config.isString(identifier + ".expression") 
 				&& config.isString(identifier + ".true_result") 
 				&& config.isString(identifier + ".false_result");
+		} else {
+			
+			return config.isString(identifier + ".expression");
+		}
 	}
 
 }

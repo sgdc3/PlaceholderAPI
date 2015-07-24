@@ -17,27 +17,41 @@ public class JavascriptPlaceholder {
 	
 	private String falseResult;
 	
+	private JavascriptReturnType type;
+	
 	private static ScriptEngine engine = null;
 	
-	public JavascriptPlaceholder(String identifier, String expression, String trueResult, String falseResult) {
+	public JavascriptPlaceholder(String identifier, JavascriptReturnType type, String expression, String trueResult, String falseResult) {
+		
+		if (type == null) {
+			throw new IllegalArgumentException("Javascript placeholder type must either be 'boolean' or 'javascript'!");
+		}
+		
+		this.type = type;
 		
 		if (identifier == null) {
 			throw new IllegalArgumentException("Javascript placeholder identifier must not be null!");
 		} else if (expression == null) {
 			throw new IllegalArgumentException("Javascript placeholder expression must not be null!");
-		} else if (trueResult == null) {
-			throw new IllegalArgumentException("Javascript placeholder true result must not be null!");
-		} else if (falseResult == null) {
-			throw new IllegalArgumentException("Javascript placeholder false result must not be null!");
 		}
-		
+
 		this.identifier = identifier;
 		
 		this.expression = expression;
 		
-		this.trueResult = trueResult;
-		
-		this.falseResult = falseResult;
+		if (type == JavascriptReturnType.BOOLEAN) {
+			
+			if (trueResult == null) {
+				throw new IllegalArgumentException("Javascript boolean placeholder must contain a true_result!");
+			} else if (falseResult == null) {
+				throw new IllegalArgumentException("Javascript boolean placeholder must contain a false_result!");
+			}
+			
+			this.trueResult = trueResult;
+			
+			this.falseResult = falseResult;
+			
+		}
 	}
 	
 	public static void cleanup() {
@@ -60,6 +74,9 @@ public class JavascriptPlaceholder {
 		return falseResult;
 	}
 	
+	public JavascriptReturnType getType() {
+		return type;
+	}
 	public String evaluate(Player p) {
 		
 		if (engine == null) {
@@ -72,16 +89,23 @@ public class JavascriptPlaceholder {
         	
             Object result = engine.eval(exp);
 
-            if (!(result instanceof Boolean)) {
-            	return "invalid javascript";
-            }
-            
-            if ((boolean) result) {
-            	return PlaceholderAPI.setPlaceholders(p, trueResult);
+            if (type == JavascriptReturnType.BOOLEAN) {
+            	
+            	if (!(result instanceof Boolean)) {
+                 	return "invalid javascript";
+                 }
+                 
+                 if ((boolean) result) {
+                 	return PlaceholderAPI.setPlaceholders(p, trueResult);
+                 } else {
+                 	return PlaceholderAPI.setPlaceholders(p, falseResult);
+                 }
+            	
             } else {
-            	return PlaceholderAPI.setPlaceholders(p, falseResult);
+            	            	
+            	return result.toString();
             }
-            
+                        
         } catch (Exception ex) {
            return null;
         }
