@@ -89,8 +89,12 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 	
 	private static String booleanFalse;
 	
+	private static PlaceholderAPIPlugin instance;
+	
 	@Override
 	public void onEnable() {
+		
+		instance = this;
 		
 		log = getLogger();
 		
@@ -177,6 +181,12 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		JavascriptPlaceholders.cleanup();
 		
 		JavascriptPlaceholder.cleanup();
+		
+		instance = null;
+	}
+	
+	public static PlaceholderAPIPlugin getInstance() {
+		return instance;
 	}
 	
 	public void initializeHooks() {

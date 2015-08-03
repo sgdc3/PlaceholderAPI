@@ -59,7 +59,34 @@ public class JavascriptPlaceholdersConfig {
 				+ "\n  expression: <expression>"
 				+ "\n  type: 'string'"
 				+ "\n"
-				+ "\nExamples:"
+				+ "\n"
+				+ "\n ==== ADVANCED VARIABLES ===="
+				+ "\nDO NOT USE THESE VARIABLES UNLESS YOU KNOW WHAT YOU ARE DOING!"
+				+ "\n"
+				+ "\nYou can access a few Bukkit API classes and methods using certain keywords:"
+				+ "\n"
+				+ "\nUsing \"BukkitServer\" in your javascript will return Bukkit.getServer()"
+				+ "\nYou can use any methods inside of the Server class:"
+				+ "\n"
+				+ "\nExample: BukkitServer.getBannedPlayers().size().toFixed()"
+				+ "\nWill return how many players are banned"
+				+ "\n"
+				+ "\nThis variable is handy if you want to iterate through all online players.'"
+				+ "\n"
+				+ "\nUsing \"BukkitPlayer\" in your javascript will return the Player object you are setting placeholders for."
+				+ "\nYou can use any methods inside of the Player class:"
+				+ "\n"
+				+ "\nExample: BukkitPlayer.hasPermission(\"some.permission\")"
+				+ "\nWill return if the player has a specific permission"
+				+ "\nThis variable is handy if you want to check a players permission node, or access other methods inside of"
+				+ "\nthe player class for the specified player."
+				+ "\n"
+				+ "\nMore advanced variables are coming soon! Only use these variables if you know what you are doing!"
+				+ "\n"
+				+ "\n =================="
+				+ "\n"
+				+ "\n"
+				+ "\nJavascript placeholder examples:"
 				+ "\n"
 				+ "\nmillionaire:"
 				+ "\n  expression: '%vaulteco_balance% >= 1000000'"
@@ -73,8 +100,12 @@ public class JavascriptPlaceholdersConfig {
 				+ "\n  false_result: '&ePlayer'"
 				+ "\nhealth_rounded:"
 				+ "\n  expression: 'Math.round(%player_health%)'"
+				+ "\n  type: 'string'"
+				+ "\nstaff_online:"
+				+ "\n  expression: 'var i = 0; for (var p in BukkitServer.getOnlinePlayers()) { if (BukkitServer.getOnlinePlayers()[p].hasPermission(\"staff.online\")) {i = i+1;};} i.toFixed();'"
 				+ "\n  type: 'string'");
 		
+
 		if (config.getKeys(false) == null || config.getKeys(false).isEmpty()) {
 			config.set("millionaire.expression", "%vaulteco_balance% >= 1000000");
 			config.set("millionaire.type", "boolean");
@@ -86,6 +117,8 @@ public class JavascriptPlaceholdersConfig {
 			config.set("is_staff.false_result", "&ePlayer");
 			config.set("health_rounded.expression", "Math.round(%player_health%)");
 			config.set("health_rounded.type", "string");
+			config.set("staff_online", "var i = 0; for (var p in BukkitServer.getOnlinePlayers()) { if (BukkitServer.getOnlinePlayers()[p].hasPermission(\"staff.online\")) {i = i+1;};} i.toFixed();");
+			config.set("staff_online.type", "string");
 		}
 		
 		save();

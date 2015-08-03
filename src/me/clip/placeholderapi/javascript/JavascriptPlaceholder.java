@@ -3,9 +3,11 @@ package me.clip.placeholderapi.javascript;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 
 public class JavascriptPlaceholder {
 
@@ -77,15 +79,19 @@ public class JavascriptPlaceholder {
 	public JavascriptReturnType getType() {
 		return type;
 	}
+	
 	public String evaluate(Player p) {
 		
 		if (engine == null) {
 			engine = new ScriptEngineManager().getEngineByName("javascript");
+        	engine.put("BukkitServer", Bukkit.getServer());
 		}
 		
 		String exp = PlaceholderAPI.setPlaceholders(p, expression);
 
         try {
+        	
+        	engine.put("BukkitPlayer", p);
         	
             Object result = engine.eval(exp);
 
@@ -107,7 +113,9 @@ public class JavascriptPlaceholder {
             }
                         
         } catch (Exception ex) {
-           return null;
+        	PlaceholderAPIPlugin.getInstance().log.severe("Error in javascript placeholder - " + this.identifier);
+        	ex.printStackTrace();
+        	return null;
         }
 	}
 }

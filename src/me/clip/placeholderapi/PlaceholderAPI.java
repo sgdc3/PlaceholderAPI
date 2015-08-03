@@ -22,7 +22,9 @@ public class PlaceholderAPI implements Listener {
 	
 	private PlaceholderAPIPlugin plugin;
 	
-	private final static Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%]([a-zA-Z0-9_.-]+)[%]");	
+	private final static Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%]([a-zA-Z0-9_.-]+)[%]");
+	
+	private final static Pattern BRACKET_PLACEHOLDER_PATTERN = Pattern.compile("[{]([a-zA-Z0-9_.-]+)[}]");
 
 	private static Map<String, PlaceholderHook> placeholders = new HashMap<String, PlaceholderHook>();
 
@@ -232,23 +234,7 @@ public class PlaceholderAPI implements Listener {
 		return new HashMap<String, PlaceholderHook>(placeholders);
 	}
 	
-	/**
-	 * set placeholders in the list<String> text provided
-	 * @param p Player to set the placeholders for
-	 * @param text text to set the placeholder values in
-	 * @return original list with all valid placeholders set to the correct values if the list contains any valid placeholders
-	 */
-	public static List<String> setPlaceholders(Player p, List<String> text) {
-		if (text == null) {
-			return text;
-		}
-		List<String> temp = new ArrayList<String>();
-		for (String line : text) {
-			temp.add(setPlaceholders(p, line));
-		}
-		return temp;
-	}
-	
+
 	/**
 	 * check if a String contains placeholders which do not require a Player object to be passed to the setPlaceholders method
 	 * @param text String to check
@@ -354,9 +340,164 @@ public class PlaceholderAPI implements Listener {
 
 		return false;
 	}
+	
+	/**
+	 * set placeholders in the list<String> text provided
+	 * placeholders are matched with the pattern {<placeholder>} when set with this method
+	 * @param p Player to set the placeholders for
+	 * @param text text to set the placeholder values in
+	 * @return original list with all valid placeholders set to the correct values if the list contains any valid placeholders
+	 */
+	public static List<String> setBracketPlaceholders(Player p, List<String> text) {
+		if (text == null) {
+			return text;
+		}
+		List<String> temp = new ArrayList<String>();
+		for (String line : text) {
+			temp.add(setBracketPlaceholders(p, line));
+		}
+		return temp;
+	}
+	
+	/**
+	 * set placeholders in the text specified
+	 * placeholders are matched with the pattern {<placeholder>} when set with this method
+	 * @param player Player to set the placeholders for
+	 * @param text text to set the placeholder values to
+	 * @return original text with all valid placeholders set to the correct values if the String contains valid placeholders
+	 */
+	public static String setBracketPlaceholders(Player player, String text) {
+
+		if (text == null || placeholders == null || placeholders.isEmpty()) {
+			return text;
+		}
+		
+		Matcher placeholderMatcher = BRACKET_PLACEHOLDER_PATTERN.matcher(text);
+		
+		if (player == null) {			
+			
+			while (placeholderMatcher.find()) {
+				
+				String format = placeholderMatcher.group(1);
+				
+			    StringBuilder pluginBuilder = new StringBuilder();		    
+			    
+			    char[] formatArray = format.toCharArray();
+
+			    int i;
+			    
+			    for (i=0;i<formatArray.length;i++) {
+			    	
+					if (formatArray[i] == '_') {
+						break;
+					} else {   
+			        	
+			        	pluginBuilder.append(formatArray[i]);
+			        }
+			    }
+			    
+			    String pl = pluginBuilder.toString();
+			    
+			    StringBuilder identifierBuilder = new StringBuilder();
+			    
+				for (int b = i+1;b<formatArray.length;b++) {
+					identifierBuilder.append(formatArray[b]);
+				}
+				
+				String identifier = identifierBuilder.toString();
+				
+				if (identifier.isEmpty()) {
+					identifier = pl;
+				}
+				
+				for (String registered : getRegisteredPlaceholderPlugins()) {
+					
+					if (pl.equalsIgnoreCase("server")) {
+						
+						String value = getPlaceholders().get(registered).onPlaceholderRequest(player, identifier);
+						
+						if (value != null) {
+							text = text.replaceAll("\\{"+format+"\\}", Matcher.quoteReplacement(value));
+						}
+					}
+				}
+			}
+			
+			return ChatColor.translateAlternateColorCodes('&', text);
+		}
+		
+		while (placeholderMatcher.find()) {
+			
+			String format = placeholderMatcher.group(1);
+			
+		    StringBuilder pluginBuilder = new StringBuilder();		    
+		    
+		    char[] formatArray = format.toCharArray();
+
+		    int i;
+		    
+		    for (i=0;i<formatArray.length;i++) {
+		    	
+				if (formatArray[i] == '_') {
+					break;
+				} else {   
+		        	
+		        	pluginBuilder.append(formatArray[i]);
+		        }
+		    }
+		    
+		    String pl = pluginBuilder.toString();
+		    
+		    StringBuilder identifierBuilder = new StringBuilder();
+		    
+			for (int b = i+1;b<formatArray.length;b++) {
+				identifierBuilder.append(formatArray[b]);
+			}
+			
+			String identifier = identifierBuilder.toString();
+			
+			if (identifier.isEmpty()) {
+				identifier = pl;
+			}
+			
+			for (String registered : getRegisteredPlaceholderPlugins()) {
+				
+				if (pl.equalsIgnoreCase(registered)) {
+					
+					String value = getPlaceholders().get(registered).onPlaceholderRequest(player, identifier);
+					
+					if (value != null) {
+						text = text.replaceAll("\\{"+format+"\\}", Matcher.quoteReplacement(value));
+					}
+				}
+			}
+		}
+
+		return ChatColor.translateAlternateColorCodes('&', text);
+	}
+	
+	/**
+	 * set placeholders in the list<String> text provided
+	 * placeholders are matched with the pattern %<placeholder>% when set with this method
+	 * @param p Player to set the placeholders for
+	 * @param text text to set the placeholder values in
+	 * @return original list with all valid placeholders set to the correct values if the list contains any valid placeholders
+	 */
+	public static List<String> setPlaceholders(Player p, List<String> text) {
+		if (text == null) {
+			return text;
+		}
+		List<String> temp = new ArrayList<String>();
+		for (String line : text) {
+			temp.add(setPlaceholders(p, line));
+		}
+		return temp;
+	}
+	
 
 	/**
 	 * set placeholders in the text specified
+	 * placeholders are matched with the pattern %<placeholder>% when set with this method
 	 * @param player Player to set the placeholders for
 	 * @param text text to set the placeholder values to
 	 * @return original text with all valid placeholders set to the correct values if the String contains valid placeholders
@@ -473,5 +614,9 @@ public class PlaceholderAPI implements Listener {
 	
 	public static Pattern getPlaceholderPattern() {
 		return PLACEHOLDER_PATTERN;
+	}
+	
+	public static Pattern getBracketPlaceholderPattern() {
+		return BRACKET_PLACEHOLDER_PATTERN;
 	}
 }
