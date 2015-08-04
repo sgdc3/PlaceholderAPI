@@ -1,7 +1,9 @@
 package me.clip.placeholderapi.configuration;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
@@ -103,7 +105,20 @@ public class JavascriptPlaceholdersConfig {
 				+ "\n  type: 'string'"
 				+ "\nstaff_online:"
 				+ "\n  expression: 'var i = 0; for (var p in BukkitServer.getOnlinePlayers()) { if (BukkitServer.getOnlinePlayers()[p].hasPermission(\"staff.online\")) {i = i+1;};} i.toFixed();'"
-				+ "\n  type: 'string'");
+				+ "\n  type: 'string'"
+				+ "\n"
+				+ "\n"
+				+ "\nYou can optionally specify a file that the javascript expression will be loaded from if your expression"
+				+ "\nis bigger than 1 line. To specify javascript be loaded from a file, follow this format:"
+				+ "\n"
+				+ "\nis_op:"
+				+ "\n  expression: 'file: is_op.js'"
+				+ "\n  type: 'string'"
+				+ "\n"
+				+ "\nThe following placeholder will attempt to load javascript from the /plugins/PlaceholderAPI/javascripts/is_op.js file"
+				+ "\nif the folder/file exists. If the folder/file does not exist it will be created."
+				+ "\nYou must specify the file extension with the file name. Any file extension is accepted."
+				+ "\n");
 		
 
 		if (config.getKeys(false) == null || config.getKeys(false).isEmpty()) {
@@ -147,6 +162,18 @@ public class JavascriptPlaceholdersConfig {
 			return 0;
 		}
 		
+		File dir = new File(plugin.getDataFolder() + File.separator + "javascripts");
+		
+		try {
+			if (!dir.exists()) {
+				dir.mkdirs();
+				plugin.getLogger().info("Creating directory: plugins" + File.separator + "PlaceholderAPI" + File.separator + "javascripts");
+			} else {
+			}
+		} catch (SecurityException e) {
+			plugin.getLogger().severe("Could not create directory: plugins" + File.separator + "PlaceholderAPI" + File.separator + "javascripts");
+		}
+
 		JavascriptPlaceholders.cleanup();
 		
 		for (String identifier : config.getKeys(false)) {
@@ -170,6 +197,23 @@ public class JavascriptPlaceholdersConfig {
 			JavascriptPlaceholder pl = null;
 			
 			String expression = config.getString(identifier + ".expression");
+
+			if (expression.startsWith("file: ")) {
+				
+				expression = expression.replace("file: ", "");
+				
+				File f = new File(plugin.getDataFolder() + File.separator + "javascripts", expression);
+				
+				expression = loadFileExpression(f);
+				
+				if (expression == null || expression.isEmpty()) {
+					plugin.getLogger().info("javascript expression from file: " + f.getName() + " is empty!");
+					continue;
+				} else {
+				
+					plugin.getLogger().info("javascript expression loaded from file: " + f.getName());
+				}
+			}
 			
 			if (type == JavascriptReturnType.BOOLEAN) {
 				
@@ -192,6 +236,54 @@ public class JavascriptPlaceholdersConfig {
 			}
 		}
 		return JavascriptPlaceholders.getJavascriptPlaceholdersAmount();
+	}
+	
+	private String loadFileExpression(File f) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+
+			if (!f.exists()) {
+				
+				plugin.getLogger().warning(f.getName() + " does not exist!");
+				
+				try {
+					
+					f.createNewFile();
+					
+					plugin.getLogger().info(f.getName() + " created! Add your javascript expression to this file and use /placeholderapi reload to load it!");
+					
+				} catch(IOException e) {
+					
+					e.printStackTrace();
+				}
+				
+				return null;
+			}
+			
+			Scanner scanner = new Scanner(f);
+
+			while (scanner.hasNextLine()) {
+				
+				String line = scanner.nextLine();
+				
+				if (line == null || line.isEmpty()) {
+					continue;
+				}
+
+				sb.append(line + " ");
+			}
+			
+			scanner.close();
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
+		
+		return sb.toString();
 	}
 	
 	private boolean isValid(String identifier, JavascriptReturnType type) {
