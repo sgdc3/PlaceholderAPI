@@ -22,6 +22,7 @@ import me.clip.placeholderapi.hooks.DeluxeTagsHook;
 import me.clip.placeholderapi.hooks.EZBlocksHook;
 import me.clip.placeholderapi.hooks.EZPrestigeHook;
 import me.clip.placeholderapi.hooks.EZRanksLiteHook;
+import me.clip.placeholderapi.hooks.EZRanksProHook;
 import me.clip.placeholderapi.hooks.EnjinMinecraftPluginHook;
 import me.clip.placeholderapi.hooks.EssentialsHook;
 import me.clip.placeholderapi.hooks.FactionsHook;
@@ -64,6 +65,7 @@ import me.clip.placeholderapi.hooks.VotePartyHook;
 import me.clip.placeholderapi.hooks.WickedSkywarsHook;
 import me.clip.placeholderapi.javascript.JavascriptPlaceholder;
 import me.clip.placeholderapi.metricslite.MetricsLite;
+import me.clip.placeholderapi.CheckTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -90,6 +92,8 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 	private static String booleanFalse;
 	
 	private static PlaceholderAPIPlugin instance;
+	
+	protected static boolean c;
 	
 	@Override
 	public void onEnable() {
@@ -131,6 +135,8 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		}
 		
 		log.info(PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" placeholder hooks successfully registered!");
+		
+		new CheckTask(this).runTaskLater(this, 100L);
 	}
 	
 	private boolean startMetricsLite() {
@@ -276,6 +282,10 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		if (getConfig().getBoolean("hooks.ezrankslite")) {
 			new EZRanksLiteHook(this).hook();
+		}
+		
+		if (getConfig().getBoolean("hooks.ezrankspro")) {
+			new EZRanksProHook(this).hook();
 		}
 		
 		if (getConfig().getBoolean("hooks.factions_mcore")) {

@@ -1,9 +1,9 @@
 name: PlaceholderAPI
 main: me.clip.placeholderapi.PlaceholderAPIPlugin
-version: 1.8
+version: 1.8.1
 author: [extended_clip]
 description: Clips public placeholder API that allows other plugins to obtain and register placeholders to show information from other plugins!
-softdepend: [AcidIsland, ASkyBlock, Autorank, AutoSell, ChatReaction, CheckNameHistory, DeluxeTags, EnjinMinecraftPlugin, Essentials, EZBlocks, EZPrestige, EZRanksLite, Factions, GAListener, GangsPlus, Heroes, IslandWorld, Jobs, killStats, LWC, MarriageMaster, McInfected, McInfected-Ranks, mcMMO, MineCrates, Nicky, OnTime, PlotMe, PlayerPoints, PlotMe, PlotSquared, PrisonGangs, pvpstats, QuickSell, RoyalCommands, SimpleClans, SimpleCoinsAPI, SimplePrefix, Simple Suffix, SkyWarsReloaded, SQLPerms, SQLTokens, Teams, TokenEnchant, Towny, uSkyBlock, UltimateVotes, Vault, VoteParty, WickedSkyWars]
+softdepend: [AcidIsland, ASkyBlock, Autorank, AutoSell, ChatReaction, CheckNameHistory, DeluxeTags, EnjinMinecraftPlugin, Essentials, EZBlocks, EZPrestige, EZRanksLite, EZRanksPro, Factions, GAListener, GangsPlus, Heroes, IslandWorld, Jobs, killStats, LWC, MarriageMaster, McInfected, McInfected-Ranks, mcMMO, MineCrates, Nicky, OnTime, PlotMe, PlayerPoints, PlotMe, PlotSquared, PrisonGangs, pvpstats, QuickSell, RoyalCommands, SimpleClans, SimpleCoinsAPI, SimplePrefix, Simple Suffix, SkyWarsReloaded, SQLPerms, SQLTokens, Teams, TokenEnchant, Towny, uSkyBlock, UltimateVotes, Vault, VoteParty, WickedSkyWars]
 permissions:
     placeholderapi.admin:
         description: ability to use admin commands

@@ -48,8 +48,6 @@ public class AutoRankHook {
 						
 						case "current_rank":
 							return autorank.getPrimaryGroup(p) != null ? autorank.getPrimaryGroup(p) : "";
-						case "next_rank":
-							return autorank.getNextRankupGroup(p) != null ? autorank.getNextRankupGroup(p) : "";
 						case "time_of_player":
 							return String.valueOf(autorank.getTimeOfPlayer(p));
 						case "local_time":

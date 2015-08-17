@@ -38,6 +38,7 @@ public class PlaceholderAPIConfig {
 		c.addDefault("hooks.ezblocks", false);
 		c.addDefault("hooks.ezprestige", false);
 		c.addDefault("hooks.ezrankslite", false);
+		c.addDefault("hooks.ezrankspro", false);
 		c.addDefault("hooks.factions_mcore", false);
 		c.addDefault("hooks.factions_uuid", false);
 		c.addDefault("hooks.galistener", false);

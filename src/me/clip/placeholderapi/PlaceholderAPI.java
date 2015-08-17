@@ -572,6 +572,8 @@ public class PlaceholderAPI implements Listener {
 
 		    int i;
 		    
+		   
+		    
 		    for (i=0;i<formatArray.length;i++) {
 		    	
 				if (formatArray[i] == '_') {

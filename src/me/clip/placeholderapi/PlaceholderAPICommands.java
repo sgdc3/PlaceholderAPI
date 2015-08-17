@@ -1,8 +1,8 @@
 package me.clip.placeholderapi;
 
 import java.util.Set;
-import org.bukkit.ChatColor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,6 +62,8 @@ public class PlaceholderAPICommands implements CommandExecutor {
 				sms(s, "&cClips &fPlaceholder&7API &bconfiguration reloaded!");
 				plugin.reloadConf(s);
 				sms(s, "&8&m-----------------------------------------------------");
+				
+				new CheckTask(plugin).runTaskLater(plugin, 100L);
 
 			} else if (args[0].equalsIgnoreCase("list")) {
 				sms(s, "&8&m-----------------------------------------------------");

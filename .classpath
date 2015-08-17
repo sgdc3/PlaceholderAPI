@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/acidisland.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/askyblock.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Downloads/Autorank.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/AutoSell-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/ChatReaction.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Essentials-1.8.jar"/>
@@ -62,5 +61,7 @@
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MineCrates.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/gangsplus.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EnjinMinecraftPlugin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/Autorank.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/EZRanksPro.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
