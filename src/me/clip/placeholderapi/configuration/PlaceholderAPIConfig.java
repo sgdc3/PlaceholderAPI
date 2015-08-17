@@ -1,6 +1,7 @@
 package me.clip.placeholderapi.configuration;
 
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.clip.placeholderapi.internal.InternalHook;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,68 +20,110 @@ public class PlaceholderAPIConfig {
 		c.options().header("PlaceholderAPI version "+plugin.getDescription().getVersion()+""
 				+ "\nCreated by extended_clip"
 				+ "\n"
+				+ "\nPlaceholder hooks:"
+				+ "\n"
+				+ "\nThere are currently " + InternalHook.values().length + " internal placeholder hooks"
+				+ "\nprovided by PlaceholderAPI that can be enabled."
+				+ "\n" + InternalHook.getHookAmountWithDependency() + " of these hooks require you have the associated"
+				+ "\ndependency installed and enabled on your server if you choose to use them."
+				+ "\n"
+				+ "\nTo enable placeholders of a specific type/plugin, you MUST have the hook set to true"
+				+ "\nin the placeholder_hooks section of this config."
+				+ "\n"
+				+ "\nInternal hooks are refreshed with /placeholderapi reload"
+				+ "\n"
+				+ "\nIn order to use a placeholder from a specific hook, you must use the hook identifier"
+				+ "\nspecified in this config followed by the placeholder value identifier:"
+				+ "\n%<hook identifier>_<value identifier>%"
+				+ "\nAll hook identifiers are listed in the placeholder_hooks section of this file."
+				+ "\n"
+				+ "\n"
+				+ "\nInjector information:"
+				+ "\n"
+				+ "\nREQUIREMENT: (ProtocolLib)"
+				+ "\n"
+				+ "\nThe injector function allows you to use placeholders in many plugins / functions"
+				+ "\nwithout the need for the plugin you want to use placeholders in to support / hook into"
+				+ "\nPlaceholderAPI."
+				+ "\nAll injectors are optional and can be enabled / disabled as you wish."
+				+ "\nNOTE: injector only loads on startup and a full restart is required to enable / disable specific"
+				+ "\ninjector functions."
+				+ "\n"
+				+ "\nAllow placeholders in any chat window message from any plugin"
+				+ "\nIf you want to use placeholders in your essentials chat formatting"
+				+ "\nyou must use {<placeholder>} instead of %<placeholder>%"
+				+ "\ninjector:"
+				+ "\n  chat:"
+				+ "\n    enabled: true/false"
+				+ "\n"
+				+ "\nAllow placeholders in any ItemStack name, lore, or inventory title"
+				+ "\ninjector:"
+				+ "\n  inventory: "
+				+ "\n    enabled: true/false"
+				+ "\n"
+				+ "\nAllow placeholders in any title or subtitle from any plugin"
+				+ "\ninjector:"
+				+ "\n  title:"
+				+ "\n    enabled: true/false"
+				+ "\n"
+				+ "\nAllow placeholders in the tab list header and footer"
+				+ "\ninjector:"
+				+ "\n  tab:"
+				+ "\n    enabled: true/false"
+				+ "\n"
+				+ "\nAllow placeholders in signs:"
+				+ "\ninjector:"
+				+ "\n  signs:"
+				+ "\n    enabled: true/false"
+				+ "\n    update_interval: <time in seconds to update sign placeholders, 0 to disable>"
+				+ "\n"
+				+ "\nAllow placeholders in HolographicDisplays holograms"
+				+ "\ninjector:"
+				+ "\n  holographicdisplays:"
+				+ "\n    enabled: true/false"
+				+ "\n    update_interval: <time in seconds to update holo placeholders>"
+				+ "\n"
+				+ "\n"
+				+ "\nTo add placeholders in chat messages, you need the permission node:"
+				+ "\nplaceholderapi.injector.chat.bypass"
+				+ "\n"
+				+ "\nTo add placeholders in sign lines, you need the permission node:"
+				+ "\nplaceholderapi.injector.signs.bypass"
+				+ "\n"
+				+ "\nTo add placeholders to items in anvils, you need the permission node:"
+				+ "\nplaceholderapi.injector.anvil.bypass"
 				+ "\n");
+		c.addDefault("check_updates", true);
 		c.addDefault("boolean.true", "yes");
 		c.addDefault("boolean.false", "no");
 		c.addDefault("date_format", "MM/dd/yy HH:mm:ss");
-		c.addDefault("hooks.minecraft_statistics", false);
-		c.addDefault("hooks.javascript_placeholders", false);
-		c.addDefault("hooks.acidisland", false);
-		c.addDefault("hooks.askyblock", false);
-		c.addDefault("hooks.autorank", false);
-		c.addDefault("hooks.autosell", false);
-		c.addDefault("hooks.battlelevels", false);
-		c.addDefault("hooks.chatreaction", false);
-		c.addDefault("hooks.checknamehistory", false);
-		c.addDefault("hooks.deluxetags", false);
-		c.addDefault("hooks.enjinminecraftplugin", false);
-		c.addDefault("hooks.essentials", false);
-		c.addDefault("hooks.ezblocks", false);
-		c.addDefault("hooks.ezprestige", false);
-		c.addDefault("hooks.ezrankslite", false);
-		c.addDefault("hooks.ezrankspro", false);
-		c.addDefault("hooks.factions_mcore", false);
-		c.addDefault("hooks.factions_uuid", false);
-		c.addDefault("hooks.galistener", false);
-		c.addDefault("hooks.gangsplus", false);
-		c.addDefault("hooks.heroes", false);
-		c.addDefault("hooks.islandworld", false);
-		c.addDefault("hooks.jobs", false);
-		c.addDefault("hooks.killstats", false);
-		c.addDefault("hooks.lwc", false);
-		c.addDefault("hooks.marriagemaster", false);
-		c.addDefault("hooks.mcinfected", false);
-		c.addDefault("hooks.mcinfected-ranks", false);
-		c.addDefault("hooks.mcmmo", false);
-		c.addDefault("hooks.minecrates", false);
-		c.addDefault("hooks.nicky", false);
-		c.addDefault("hooks.ontime", false);
-		c.addDefault("hooks.playerpoints", false);
-		c.addDefault("hooks.plotme", false);
-		c.addDefault("hooks.plotsquared", false);
-		c.addDefault("hooks.prisongangs", false);
-		c.addDefault("hooks.pvpstats", false);
-		c.addDefault("hooks.quicksell", false);
-		c.addDefault("hooks.royalcommands", false);
-		c.addDefault("hooks.simpleclans", false);
-		c.addDefault("hooks.simplecoinsapi", false);
-		c.addDefault("hooks.simpleprefix", false);
-		c.addDefault("hooks.simple_suffix", false);
-		c.addDefault("hooks.skywarsreloaded", false);
-		c.addDefault("hooks.sqlperms", false);
-		c.addDefault("hooks.sqltokens", false);
-		c.addDefault("hooks.teams", false);
-		c.addDefault("hooks.tokenenchant", false);
-		c.addDefault("hooks.towny", false);
-		c.addDefault("hooks.uskyblock", false);
-		c.addDefault("hooks.ultimatevotes", false);
-		c.addDefault("hooks.vault_perms", true);
-		c.addDefault("hooks.vault_eco", true);
-		c.addDefault("hooks.voteparty", true);
-		c.addDefault("hooks.wickedskywars", false);
+		c.set("hooks", null);
+
+		for (InternalHook hooks : InternalHook.values()) {
+			c.addDefault("placeholder_hooks." + hooks.getIdentifier(), false);
+		}
+		
+		c.addDefault("injector.enabled", false);
+		c.addDefault("injector.chat.enabled", true);
+		c.addDefault("injector.inventory.enabled", true);
+		c.addDefault("injector.title.enabled", true);
+		c.addDefault("injector.tab.enabled", true);
+		c.addDefault("injector.signs.enabled", true);
+		c.addDefault("injector.signs.update_interval", 30);
+		c.addDefault("injector.holographicdisplays.enabled", true);
+		c.addDefault("injector.holographicdisplays.update_interval", 30);
+		
 		c.options().copyDefaults(true);
 		plugin.saveConfig();
 		plugin.reloadConfig();
+	}
+	
+	public boolean checkUpdates() {
+		return plugin.getConfig().getBoolean("check_updates");
+	}
+	
+	public boolean injectorEnabled() {
+		return plugin.getConfig().getBoolean("injector.enabled");
 	}
 	
 	public String booleanTrue() {
@@ -94,5 +137,18 @@ public class PlaceholderAPIConfig {
 	public String dateFormat() {
 		return plugin.getConfig().getString("date_format");
 	}
+	
+	public int getTaskInterval(String hook) {
+		return plugin.getConfig().getInt(hook + ".check_interval", 30);
+	}
+	
+	public String getPingOnline() {
+		return plugin.getConfig().getString("pinger.online");
+	}
+	
+	public String getPingOffline() {
+		return plugin.getConfig().getString("pinger.offline");
+	}
+	
 	
 }

@@ -1,42 +1,67 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.minecrates.MineCrates;
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.minecrates.area.AreaHandler;
+import me.clip.minecrates.rewards.RewardArea;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class MineCratesHook {
+public class MineCratesHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-	
-	public MineCratesHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public MineCratesHook(InternalHook hook) {
+		super(hook);
 	}
 	
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("MineCrates")) {
-			
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook("MineCrates", new PlaceholderHook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
+		}
+		
+		AreaHandler h = MineCrates.getInstance().getAreaHandler();
+		
+		if (identifier.equalsIgnoreCase("area_handler_type")) {
+			return h.getType().getName();
+		}
+		
+		String area = h.getArea(p.getLocation());
+		
+		if (identifier.equalsIgnoreCase("area_name")) {
+			return area != null ? area : "";
+		}
+		
+		
+		//get the MineCrates reward area associated with the area name found from the hook
+		RewardArea rArea = RewardArea.getRewardArea(area);
+		
+		if (identifier.equalsIgnoreCase("in_reward_area")) {
+			return rArea != null ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+		}
+		
+		if (rArea == null) {
+			return "";
+		}
+		
+		if (identifier.equalsIgnoreCase("counter")) {
+			return String.valueOf(rArea.getCounter());
+		}
+		
+		if (identifier.equalsIgnoreCase("chance")) {
+			return String.valueOf(rArea.getDropChance());
+		}
+		
+		if (identifier.equalsIgnoreCase("total_needed")) {
+			return String.valueOf(rArea.getThreshold());
+		}
+		
+		if (identifier.equalsIgnoreCase("reward_list_name")) {
+			return rArea.getRewardList(p) != null ? rArea.getRewardList(p).getName() : "none";
+		}
 
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (identifier.equalsIgnoreCase("counter")) {
-									return String.valueOf(MineCrates.getBreakCounter());
-								} else if (identifier.equalsIgnoreCase("total_needed")) {
-									return String.valueOf(MineCrates.getMaxBreaks());
-								}
-								return null;
-							}
-
-						}, true);
-
-				if (hooked) {
-					plugin.log.info("Hooked into MineCrates for placeholders!");
-				}
-			}
+		return null;
 	}
 }

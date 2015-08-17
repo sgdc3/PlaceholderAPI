@@ -1,50 +1,33 @@
 package me.clip.placeholderapi.hooks;
 
 import me.bimmr.mcinfectedranks.McInfectedRanks;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class McInfectedRanksHook {
+public class McInfectedRanksHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public McInfectedRanksHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public McInfectedRanksHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-
-		if (Bukkit.getPluginManager().isPluginEnabled("McInfected-Ranks")) {
-
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("McInfected-Ranks", new PlaceholderHook() {
-
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-					
-					if (p == null) {
-						return "";
-					}
-					
-					switch (identifier) {
-
-					case "rank":
-						return getRank(p);
-					case "prefix":
-						return getPrefix(p);
-
-					}
-					return null;
-				}
-			}, true);
-
-			if (hooked) {
-				plugin.log.info("Hooked into McInfected-Ranks for placeholders!");
-			}
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
 		}
+		
+		switch (identifier) {
+
+		case "rank":
+			return getRank(p);
+		case "prefix":
+			return getPrefix(p);
+
+		}
+		return null;
 	}
 
 	private String getRank(Player p) {

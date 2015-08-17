@@ -5,73 +5,16 @@ import me.clip.autosell.SellHandler;
 import me.clip.autosell.multipliers.Multipliers;
 import me.clip.autosell.objects.Multiplier;
 import me.clip.autosell.objects.PermissionMultiplier;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class AutoSellHook {
+public class AutoSellHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-	
-	public AutoSellHook(PlaceholderAPIPlugin i) {
-		plugin = i;
-	}
-
-	public void hook() {
-		
-		if (Bukkit.getPluginManager().isPluginEnabled("AutoSell")) {
-			
-			AutoSell as = AutoSell.getInstance();
-			
-			if (as != null) {
-				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(as, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-
-						if (p == null) {
-							return "";
-						}
-						
-						// %autosell_current_shop%
-						switch (identifier) {
-	
-						case "in_autosell_mode":
-							return inSell(p);
-						case "in_autoblocks_mode":
-							return inBlocks(p);
-						case "in_automelt_mode":
-							return inSmelt(p);
-						case "current_shop":
-							return getCurrentShop(p);
-						case "total_multiplier":
-							return getTotalMulti(p);
-						case "time_multiplier_minsleft":
-							return getTimeMultiMins(p);
-						case "time_multiplier_timeleft":
-							return getTimeMultiTime(p);
-						case "time_multiplier":
-							return getTimeMulti(p);
-						case "perm_multiplier_name":
-							return getPermMultiName(p);
-						case "perm_multiplier":
-							return getPermMulti(p);
-						}
-						
-						return null;
-					}
-					
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into AutoSell for placeholders!");
-				}	
-			}
-		}
+	public AutoSellHook(InternalHook hook) {
+		super(hook);
 	}
 	
 	private String getPermMulti(Player p) {
@@ -169,5 +112,42 @@ public class AutoSellHook {
 	
 	private String inBlocks(Player p) {
 		return AutoSell.inAutoBlockMode(p) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+	}
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+
+		if (p == null) {
+			return "";
+		}
+		
+		// %autosell_current_shop%
+		switch (identifier) {
+
+		case "in_autosell_mode":
+			return inSell(p);
+		case "in_autoblocks_mode":
+			return inBlocks(p);
+		case "in_automelt_mode":
+			return inSmelt(p);
+		case "current_shop":
+			return getCurrentShop(p);
+		case "total_multiplier":
+			return getTotalMulti(p);
+		case "time_multiplier_minsleft":
+			return getTimeMultiMins(p);
+		case "time_multiplier_timeleft":
+			return getTimeMultiTime(p);
+		case "time_multiplier":
+			return getTimeMulti(p);
+		case "perm_multiplier_name":
+			return getPermMultiName(p);
+		case "perm_multiplier":
+			return getPermMulti(p);
+		}
+		
+		return null;
+	
 	}
 }

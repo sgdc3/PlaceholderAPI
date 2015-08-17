@@ -1,60 +1,43 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.mooglemods.wickedskywars.controllers.PlayerController;
 import com.mooglemods.wickedskywars.player.GamePlayer;
 
-public class WickedSkywarsHook {
+public class WickedSkywarsHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-
-	public WickedSkywarsHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public WickedSkywarsHook(InternalHook hook) {
+		super(hook);
 	}
 	
-	public void hook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("WickedSkyWars")) {
-			
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("WickedSkyWars", new PlaceholderHook() {
-
-						@Override
-						public String onPlaceholderRequest(Player p, String identifier) {
-							
-							if (p == null) {
-								return "";
-							}
-
-							switch(identifier) {
-							
-							case "score":
-								return getScore(p);
-							case "kills":
-								return getKills(p);
-							case "deaths":
-								return getDeaths(p);
-							case "gamesplayed":
-							case "played":
-								return getGamesPlayed(p);
-							case "gameswon":
-							case "won":
-								return getGamesWon(p);
-							
-							}
-							return null;
-						}
-					}, true);
-
-			if (hooked) {
-				plugin.log.info("Hooked into WickedSkyWars for placeholders!");
-			}			
+		if (p == null) {
+			return "";
 		}
+
+		switch(identifier) {
+		
+		case "score":
+			return getScore(p);
+		case "kills":
+			return getKills(p);
+		case "deaths":
+			return getDeaths(p);
+		case "gamesplayed":
+		case "played":
+			return getGamesPlayed(p);
+		case "gameswon":
+		case "won":
+			return getGamesWon(p);
+		
+		}
+		return null;
 	}
 	
 	private String getScore(Player p) { 

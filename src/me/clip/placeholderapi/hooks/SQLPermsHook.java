@@ -1,8 +1,8 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,56 +10,51 @@ import org.bukkit.entity.Player;
 import src.john01dav.sqlperms.SQLPerms;
 import src.john01dav.sqlperms.database.DataStore;
 
-public class SQLPermsHook {
-
-	private PlaceholderAPIPlugin plugin;
-
+public class SQLPermsHook extends IPlaceholderHook {
+	
 	private SQLPerms sqlperms;
 
-	public SQLPermsHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public SQLPermsHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
+	@Override
+	public boolean hook() {
 
-		if (Bukkit.getPluginManager().isPluginEnabled("SQLPerms")) {
-
-			sqlperms = (SQLPerms) Bukkit.getPluginManager().getPlugin("SQLPerms");
+		boolean hooked = false;
 		
-			if (sqlperms != null) {
+		sqlperms = (SQLPerms) Bukkit.getPluginManager().getPlugin(getPlugin());
+		
+		if (sqlperms != null) {
 				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(sqlperms, new PlaceholderHook() {
-
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (p == null) {
-									return "";
-								}
-								
-								if (identifier.contains("rank_")) {
-									
-									String channel = identifier.split("rank_")[1];
-
-									return getPrefix(p, channel);
-									
-								} else if (identifier.contains("prefix_")) {
-									
-									String channel = identifier.split("prefix_")[1];
-									
-									return getPrefix(p, getGroup(p, channel));
-								}
-								return null;
-							}
-
-						}, true);
-
-				if (hooked) {
-					plugin.log.info("Hooked into SQLPerms for placeholders!");
-				}
-			}
+			hooked = PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
 		}
+		
+		return hooked;
 	}
+	
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
+		}
+		
+		if (identifier.contains("rank_")) {
+			
+			String channel = identifier.split("rank_")[1];
+
+			return getPrefix(p, channel);
+			
+		} else if (identifier.contains("prefix_")) {
+			
+			String channel = identifier.split("prefix_")[1];
+			
+			return getPrefix(p, getGroup(p, channel));
+		}
+		return null;
+	}
+
 	
 	private String getPrefix(Player p, String rank) {
 		

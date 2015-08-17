@@ -1,55 +1,46 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.vk2gpz.tokenenchant.TokenEnchant;
 
-public class TokenEnchantHook {
+public class TokenEnchantHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public TokenEnchantHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public TokenEnchantHook(InternalHook hook) {
+		super(hook);
 	}
 	
-
-
 	private TokenEnchant te;
 	
-	public void hook() {
+	@Override
+	public boolean hook() {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("TokenEnchant")) {
+		boolean hooked = false;
+		
+		te = (TokenEnchant) Bukkit.getPluginManager().getPlugin(getPlugin());
 			
-			te = (TokenEnchant) Bukkit.getPluginManager().getPlugin("TokenEnchant");
-			
-			if (te != null) {
+		if (te != null) {
 
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(te, new PlaceholderHook() {
-
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (p == null) {
-									return "";
-								}
-
-								if (identifier.equals("tokens")) {
-									return String.valueOf(te.getTokens(p));
-								}
-								return null;
-							}
-
-						}, true);
-
-				if (hooked) {
-					plugin.log.info("Hooked into TokenEnchant for placeholders!");
-				}
-			}
+			hooked = PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
 		}
+		return hooked;
+	}
+	
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (te == null || p == null) {
+			return "";
+		}
+
+		if (identifier.equals("tokens")) {
+			return String.valueOf(te.getTokens(p));
+		}
+		return null;
 	}
 }

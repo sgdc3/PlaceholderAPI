@@ -1,47 +1,30 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.germanelectronix.simplecoins.SimpleCoinsAPI;
 
-public class SimpleCoinsAPIHook {
+public class SimpleCoinsAPIHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-	
-	public SimpleCoinsAPIHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public SimpleCoinsAPIHook(InternalHook hook) {
+		super(hook);
 	}
 	
 
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("SimpleCoinsAPI")) {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("SimpleCoinsAPI", new PlaceholderHook() {
-
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-
-					if (p == null) {
-						return "";
-					}
-					
-					if (identifier.equals("coins")) {
-						return getCoins(p);
-					}
-					return null;
-				}
-				
-			}, true);
-			
-			if (hooked) {
-				plugin.log.info("Hooked into QuickSell for placeholders!");
-			}
+		if (p == null) {
+			return "";
 		}
+		
+		if (identifier.equals("coins")) {
+			return getCoins(p);
+		}
+		return null;
 	}
 	
 	private String getCoins(Player p) {

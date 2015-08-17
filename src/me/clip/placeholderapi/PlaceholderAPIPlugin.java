@@ -2,70 +2,13 @@ package me.clip.placeholderapi;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Logger;
 
 import me.clip.placeholderapi.configuration.PlaceholderAPIConfig;
-import me.clip.placeholderapi.placeholders.PlayerPlaceholders;
-import me.clip.placeholderapi.placeholders.JavascriptPlaceholders;
-import me.clip.placeholderapi.placeholders.ServerPlaceholders;
-import me.clip.placeholderapi.placeholders.Statistic_1_7_10_Placeholders;
-import me.clip.placeholderapi.placeholders.Statistic_1_8_1_Placeholders;
-import me.clip.placeholderapi.placeholders.Statistic_1_8_3_Placeholders;
-import me.clip.placeholderapi.placeholders.Statistic_1_8_4_Placeholders;
-import me.clip.placeholderapi.hooks.ASkyblockHook;
-import me.clip.placeholderapi.hooks.AcidIslandHook;
-import me.clip.placeholderapi.hooks.AutoRankHook;
-import me.clip.placeholderapi.hooks.AutoSellHook;
-import me.clip.placeholderapi.hooks.ChatReactionHook;
-import me.clip.placeholderapi.hooks.CheckNameHistoryHook;
-import me.clip.placeholderapi.hooks.DeluxeTagsHook;
-import me.clip.placeholderapi.hooks.EZBlocksHook;
-import me.clip.placeholderapi.hooks.EZPrestigeHook;
-import me.clip.placeholderapi.hooks.EZRanksLiteHook;
-import me.clip.placeholderapi.hooks.EZRanksProHook;
-import me.clip.placeholderapi.hooks.EnjinMinecraftPluginHook;
-import me.clip.placeholderapi.hooks.EssentialsHook;
-import me.clip.placeholderapi.hooks.FactionsHook;
-import me.clip.placeholderapi.hooks.FactionsUUIDHook;
-import me.clip.placeholderapi.hooks.GAListenerHook;
-import me.clip.placeholderapi.hooks.GangsPlusHook;
-import me.clip.placeholderapi.hooks.HeroesHook;
-import me.clip.placeholderapi.hooks.IslandWorldHook;
-import me.clip.placeholderapi.hooks.JobsHook;
-import me.clip.placeholderapi.hooks.KillStatsHook;
-import me.clip.placeholderapi.hooks.LWCHook;
-import me.clip.placeholderapi.hooks.MarriageMasterHook;
-import me.clip.placeholderapi.hooks.McInfectedHook;
-import me.clip.placeholderapi.hooks.McInfectedRanksHook;
-import me.clip.placeholderapi.hooks.McMMOHook;
-import me.clip.placeholderapi.hooks.MineCratesHook;
-import me.clip.placeholderapi.hooks.NickyHook;
-import me.clip.placeholderapi.hooks.OnTimeHook;
-import me.clip.placeholderapi.hooks.PlayerPointsHook;
-import me.clip.placeholderapi.hooks.PlotMeHook;
-import me.clip.placeholderapi.hooks.PlotSquaredHook;
-import me.clip.placeholderapi.hooks.PrisonGangsHook;
-import me.clip.placeholderapi.hooks.PvPStatsHook;
-import me.clip.placeholderapi.hooks.QuickSellHook;
-import me.clip.placeholderapi.hooks.RoyalCommandsHook;
-import me.clip.placeholderapi.hooks.SQLPermsHook;
-import me.clip.placeholderapi.hooks.SQLTokensHook;
-import me.clip.placeholderapi.hooks.SimpleClansHook;
-import me.clip.placeholderapi.hooks.SimpleCoinsAPIHook;
-import me.clip.placeholderapi.hooks.SimplePrefixHook;
-import me.clip.placeholderapi.hooks.SimpleSuffixHook;
-import me.clip.placeholderapi.hooks.SkyWarsReloadedHook;
-import me.clip.placeholderapi.hooks.TeamsHook;
-import me.clip.placeholderapi.hooks.TokenEnchantHook;
-import me.clip.placeholderapi.hooks.TownyHook;
-import me.clip.placeholderapi.hooks.USkyblockHook;
-import me.clip.placeholderapi.hooks.UltimateVotesHook;
-import me.clip.placeholderapi.hooks.VaultHook;
-import me.clip.placeholderapi.hooks.VotePartyHook;
-import me.clip.placeholderapi.hooks.WickedSkywarsHook;
-import me.clip.placeholderapi.javascript.JavascriptPlaceholder;
+import me.clip.placeholderapi.injector.PlaceholderInjector;
+import me.clip.placeholderapi.internal.InternalHook;
+import me.clip.placeholderapi.internal.NMSVersion;
 import me.clip.placeholderapi.metricslite.MetricsLite;
-import me.clip.placeholderapi.CheckTask;
+import me.clip.placeholderapi.updatechecker.UpdateChecker;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -79,11 +22,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PlaceholderAPIPlugin extends JavaPlugin {
 	
-	private PlaceholderAPI api;
-	
 	private PlaceholderAPIConfig config;
 	
-	public Logger log;
+	private PlaceholderInjector injector;
 	
 	private static SimpleDateFormat dateFormat;
 	
@@ -93,50 +34,97 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 	
 	private static PlaceholderAPIPlugin instance;
 	
-	protected static boolean c;
+	private static NMSVersion nmsVersion;
+	
+	private static boolean isSpigot;
 	
 	@Override
 	public void onEnable() {
-		
+
 		instance = this;
 		
-		log = getLogger();
+		if (checkForSpigot()) {
+			getLogger().info("This server is running Spigot :)");
+		}
+		
+		setupNMS();
 		
 		config = new PlaceholderAPIConfig(this);
 		
 		config.loadDefConfig();
 		
-		booleanTrue = config.booleanTrue();
+		setupOptions();
 		
+		getCommand("placeholderapi").setExecutor(new PlaceholderAPICommands(this));
+		
+		getLogger().info("Internal placeholder registration initializing...");
+		
+		new PlaceholderListener(this);
+		
+		InternalHook.registerHooks();
+		
+		if (config.checkUpdates()) {
+			new UpdateChecker(this);
+		}
+		
+		if (!startMetricsLite()) {
+			getLogger().warning("Could not start MetricsLite");
+		}
+		
+		if (config.injectorEnabled()) {
+			if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+				injector = new PlaceholderInjector(this);
+				injector.setup();
+			} else {
+				getLogger().warning("Could not hook into ProtocolLib!");
+				getLogger().info("Placeholder injector requires ProtocolLib in order to be used!");
+			}
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		if (injector != null) {
+			injector.disable();
+		}
+		PlaceholderAPI.unregisterAll();
+		Bukkit.getScheduler().cancelTasks(this);
+		instance = null;
+	}
+	
+	protected void reloadConf(CommandSender s) {
+		reloadConfig();
+		saveConfig();
+		setupOptions();
+		PlaceholderAPI.resetInternalPlaceholderHooks();
+		InternalHook.registerHooks();
+		s.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" &aplaceholder hooks successfully registered!"));
+	}
+	
+	private void setupOptions() {
+		booleanTrue = config.booleanTrue();
 		if (booleanTrue == null) {
 			booleanTrue = "true";
 		}
-		
 		booleanFalse = config.booleanFalse();
-		
 		if (booleanFalse == null) {
 			booleanFalse = "false";
 		}
-		
 		try {
 			dateFormat = new SimpleDateFormat(config.dateFormat());
 		} catch (Exception e) {
 			dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 		}
-
-		api = new PlaceholderAPI(this);
-		
-		getCommand("placeholderapi").setExecutor(new PlaceholderAPICommands(this));
-		
-		initializeHooks();
-		
-		if (!startMetricsLite()) {
-			log.warning("Could not start MetricsLite");
+	}
+	
+	private boolean checkForSpigot() {
+		try {
+			Class.forName("org.spigotmc.SpigotConfig");
+			isSpigot = true;
+		} catch (Exception exception) {
+			isSpigot = false;
 		}
-		
-		log.info(PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" placeholder hooks successfully registered!");
-		
-		new CheckTask(this).runTaskLater(this, 100L);
+		return isSpigot;
 	}
 	
 	private boolean startMetricsLite() {
@@ -149,307 +137,81 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		}
 	}
 	
-	protected void reloadConf(CommandSender s) {
-		
-		reloadConfig();
-		saveConfig();
-		
-		booleanTrue = config.booleanTrue();
-		
-		if (booleanTrue == null) {
-			booleanTrue = "true";
-		}
-		
-		booleanFalse = config.booleanFalse();
-		
-		if (booleanFalse == null) {
-			booleanFalse = "false";
-		}
-		
+	private void setupNMS() {
+		String v = "unknown";
 		try {
-			dateFormat = new SimpleDateFormat(config.dateFormat());
-		} catch (Exception e) {
-			dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+			v = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+        }
+		nmsVersion = NMSVersion.getVersion(v);
+		if (nmsVersion == NMSVersion.UNKNOWN) {
+			getLogger().info("Your " + (isSpigot ? "Spigot" : "Bukkit")+ " version is not supported by PlaceholderAPI.");
+			getLogger().info("Placeholder hooks which use NMS are not compatible with version: +" + v);
+		} else {
+			getLogger().info("Detected NMS version: " + nmsVersion.getVersion());	
 		}
-		
-		api.resetInternalPlaceholderHooks();
-		
-		s.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" &aplaceholder hooks successfully registered!"));
-	}
-
-	@Override
-	public void onDisable() {
-		
-		Bukkit.getScheduler().cancelTasks(this);
-		
-		api.unregisterAll();
-		
-		JavascriptPlaceholders.cleanup();
-		
-		JavascriptPlaceholder.cleanup();
-		
-		instance = null;
 	}
 	
+	/**
+	 * Gets the static instance of the main class for PlaceholderAPI.
+	 * This class is not the actual API class, this is the main class that extends JavaPlugin.
+	 * For most API methods, use static methods available from the class: {@link PlaceholderAPI}
+	 * @return
+	 */
 	public static PlaceholderAPIPlugin getInstance() {
 		return instance;
 	}
 	
-	public void initializeHooks() {
-		
-		new PlayerPlaceholders(this).hook();
-		
-		new ServerPlaceholders(this).hook();
-		
-		if (getConfig().getBoolean("hooks.javascript_placeholders")) {
-			new JavascriptPlaceholders(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.minecraft_statistics")) {
-			
-			String version;
-			
-			try {
-				
-				version = Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
-				
-				if (version.equals("v1_7_R4")) {
-					
-					new Statistic_1_7_10_Placeholders(this).hook();
-					
-				} else if (version.equals("v1_8_R1")) {
-					
-					new Statistic_1_8_1_Placeholders(this).hook();
-					
-				} else if (version.equals("v1_8_R2")) {
-					
-					new Statistic_1_8_3_Placeholders(this).hook();
-					
-				} else if (version.equals("v1_8_R3")) {
-					
-					new Statistic_1_8_4_Placeholders(this).hook();
-					
-				} else {
-					getLogger().warning("Statistic placeholders are not available for your server version!");
-				}
-				
-	        } catch (ArrayIndexOutOfBoundsException ex) {
-	        	getLogger().warning("Statistic placeholders are not available for your server version!");
-	        }
-		}
-		
-		if (getConfig().getBoolean("hooks.acidisland")) {
-			new AcidIslandHook(this).hook();
-		} else if (getConfig().getBoolean("hooks.askyblock")) {
-			new ASkyblockHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.autorank")) {
-			new AutoRankHook(this).hook();
-		}
-	
-		if (getConfig().getBoolean("hooks.autosell")) {
-			new AutoSellHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.chatreaction")) {
-			new ChatReactionHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.checknamehistory")) {
-			new CheckNameHistoryHook(this).hook();
-		}
-
-		if (getConfig().getBoolean("hooks.deluxetags")) {
-			new DeluxeTagsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.enjinminecraftplugin")) {
-			new EnjinMinecraftPluginHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.essentials")) {
-			new EssentialsHook(this).hook();
-		}
-
-		if (getConfig().getBoolean("hooks.ezblocks")) {
-			new EZBlocksHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.ezprestige")) {
-			new EZPrestigeHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.ezrankslite")) {
-			new EZRanksLiteHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.ezrankspro")) {
-			new EZRanksProHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.factions_mcore")) {
-			
-			new FactionsHook(this).hook();
-			
-		} else if (getConfig().getBoolean("hooks.factions_uuid")) {
-			
-			new FactionsUUIDHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.galistener")) {
-			new GAListenerHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.gangsplus")) {
-			new GangsPlusHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.heroes")) {
-			new HeroesHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.islandworld")) {
-			new IslandWorldHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.jobs")) {
-			new JobsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.killstats")) {
-			new KillStatsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.lwc")) {
-			new LWCHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.marriagemaster")) {
-			new MarriageMasterHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.mcinfected")) {
-			new McInfectedHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.mcinfected-ranks")) {
-			new McInfectedRanksHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.mcmmo")) {
-			new McMMOHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.minecrates")) {
-			new MineCratesHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.nicky")) {
-			new NickyHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.ontime")) {
-			new OnTimeHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.playerpoints")) {
-			new PlayerPointsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.plotme")) {
-			new PlotMeHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.plotsquared")) {
-			new PlotSquaredHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.prisongangs")) {
-			new PrisonGangsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.pvpstats")) {
-			new PvPStatsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.quicksell")) {
-			new QuickSellHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.royalcommands")) {
-			new RoyalCommandsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.simpleclans")) {
-			new SimpleClansHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.simplecoinsapi")) {
-			new SimpleCoinsAPIHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.simpleprefix")) {
-			new SimplePrefixHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.simple_suffix")) {
-			new SimpleSuffixHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.skywarsreloaded")) {
-			new SkyWarsReloadedHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.sqlperms")) {
-			new SQLPermsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.sqltokens")) {
-			new SQLTokensHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.teams")) {
-			new TeamsHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.tokenenchant")) {
-			new TokenEnchantHook(this).hook();
-		}	
-
-		if (getConfig().getBoolean("hooks.towny")) {
-			new TownyHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.uskyblock")) {
-			new USkyblockHook(this).hook();
-		}
-		
-		if (getConfig().getBoolean("hooks.ultimatevotes")) {
-			new UltimateVotesHook(this).hook();
-		}
-		
-		new VaultHook(this).hook();
-		
-		if (getConfig().getBoolean("hooks.voteparty")) {
-			new VotePartyHook(this).hook();
-		}
-
-		if (getConfig().getBoolean("hooks.wickedskywars")) {
-			new WickedSkywarsHook(this).hook();
-		}
-	}
-	
+	/**
+	 * Get the configurable {@linkplain SimpleDateFormat} object that is used to parse time for generic time based placeholders
+	 * @return
+	 */
 	public static SimpleDateFormat getDateFormat() {
-		return dateFormat;
+		return dateFormat != null ? dateFormat : new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 	}
 	
+	/**
+	 * Get the configurable {@linkplain String} value that should be returned when a boolean is true
+	 * @return
+	 */
 	public static String booleanTrue() {
-		return booleanTrue;
+		return booleanTrue != null ? booleanTrue : "true";
 	}
 	
+	/**
+	 * Get the configurable {@linkplain String} value that should be returned when a boolean is false
+	 * @return
+	 */
 	public static String booleanFalse() {
-		return booleanFalse;
+		return booleanFalse != null ? booleanFalse : "false";
 	}
 	
+	/**
+	 * Get the net.minecraft.server version for this server
+	 * @return {@link NMSVersion} that this server is running, {@link NMSVersion.UNKNOWN}
+	 * If PlaceholderAPI does not recognize the net.minecraft.server version this server
+	 * is running.
+	 * 
+	 */
+	public static NMSVersion getNMSVersion() {
+		return nmsVersion != null ? nmsVersion : NMSVersion.UNKNOWN;
+	}
+	
+	/**
+	 * Obtain the configuration class for PlaceholderAPI.
+	 * This class contains special methods to load the default config, obtain certain config values, etc.
+	 * This method should not be used by external plugins.
+	 * @return PlaceholderAPIConfig instance
+	 */
+	public PlaceholderAPIConfig getPlaceholderAPIConfig() {
+		return config;
+	}
+
+	/**
+	 * Check if the server is running Spigot
+	 * @return true if the server is running Spigot
+	 */
+	public static boolean isSpigot() {
+		return isSpigot;
+	}
 }

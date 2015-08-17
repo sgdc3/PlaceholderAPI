@@ -3,26 +3,25 @@ package me.clip.placeholderapi.placeholders;
 import java.util.HashSet;
 import java.util.Set;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
 import me.clip.placeholderapi.configuration.JavascriptPlaceholdersConfig;
+import me.clip.placeholderapi.internal.Cacheable;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 import me.clip.placeholderapi.javascript.JavascriptPlaceholder;
 
 import org.bukkit.entity.Player;
 
-public class JavascriptPlaceholders {
+public class JavascriptPlaceholders extends IPlaceholderHook implements Cacheable {
 
-	private PlaceholderAPIPlugin plugin;
-	
 	private JavascriptPlaceholdersConfig config;
 	
 	private static Set<JavascriptPlaceholder> scripts;
 
-	public JavascriptPlaceholders(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public JavascriptPlaceholders(InternalHook hook) {
 		
-		config = new JavascriptPlaceholdersConfig(plugin);
+		super(hook);
+		
+		config = new JavascriptPlaceholdersConfig(getPlaceholderAPI());
 		
 		config.loadPlaceholders();
 	}
@@ -55,40 +54,31 @@ public class JavascriptPlaceholders {
 		return scripts == null ? 0 : scripts.size();
 	}
 	
-	public static void cleanup() {
+	@Override
+	public void clear() {
 		scripts = null;
+		JavascriptPlaceholder.cleanup();
 	}
 
-	public void hook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("javascript", new PlaceholderHook() {
+		if (p == null) {
+			return "";
+		}
+		
+		if (scripts == null) {
+			return null;
+		}
 
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-					
-					if (p == null) {
-						return "";
-					}
-					
-					if (scripts == null) {
-						return null;
-					}
-
-					for (JavascriptPlaceholder script : scripts) {
-						
-						if (script.getIdentifier().equalsIgnoreCase(identifier)) {
-							
-							return script.evaluate(p);
-						}
-					}
-					
-					return null;
-				}
-				
-			}, true);
+		for (JavascriptPlaceholder script : scripts) {
 			
-			if (hooked) {
-				plugin.log.info(getJavascriptPlaceholdersAmount() + " Javascript placeholders registered!");
+			if (script.getIdentifier().equalsIgnoreCase(identifier)) {
+				
+				return script.evaluate(p);
 			}
+		}
+		
+		return null;
 	}
 }

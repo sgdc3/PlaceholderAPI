@@ -1,62 +1,53 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.MarriageMaster.Bukkit.MarriageMaster;
 
-public class MarriageMasterHook {
+public class MarriageMasterHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-
 	private MarriageMaster marriage;
 	
-	public MarriageMasterHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public MarriageMasterHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("MarriageMaster")) {
-
-			marriage = (MarriageMaster) Bukkit.getPluginManager().getPlugin("MarriageMaster");
+	@Override
+	public boolean hook() {
+		
+		boolean hooked = false;
+		
+		marriage = (MarriageMaster) Bukkit.getPluginManager().getPlugin(getPlugin());
 
 			if (marriage != null) {
 				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(
-						marriage, new PlaceholderHook() {
-
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (p == null) {
-									return "";
-								}
-
-								switch (identifier) {
-								
-								case "married":
-									return married(p);
-								case "partner":
-									return getPartner(p);
-								
-								}
-								return null;
-							}
-
-						}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into MarriageMaster for paceholders!");
-				} else {
-					marriage = null;
-				}
+				hooked = PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
 			}
+		return hooked;
+	}
+
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+		if (p == null) {
+			return "";
 		}
 
+		switch (identifier) {
+
+		case "married":
+			return married(p);
+		case "partner":
+			return getPartner(p);
+
+		}
+		return null;
 	}
 	
 	private boolean isMarried(Player p) {

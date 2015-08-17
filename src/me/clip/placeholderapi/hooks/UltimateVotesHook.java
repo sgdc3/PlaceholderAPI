@@ -1,54 +1,38 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import teozfrank.ultimatevotes.util.UltimateVotesAPI;
 
-public class UltimateVotesHook {
-
-	private PlaceholderAPIPlugin plugin;
+public class UltimateVotesHook extends IPlaceholderHook {
 	
-	public UltimateVotesHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public UltimateVotesHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("UltimateVotes")) {
-			
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook("UltimateVotes", new PlaceholderHook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
+		}
 
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (p == null) {
-									return "";
-								}
-
-								switch (identifier) {
-								
-								case "monthlyvotes":
-									return getMonthly(p);
-								case "totalvotes":
-									return getTotal(p);
-								case "hasvoted":
-									return hasVoted(p);
-								
-								}
-								return null;
-							}
-						}, true);
-
-				if (hooked) {
-					plugin.log.info("Hooked into UltimateVotes for placeholders!");
-				}
-			}
+		switch (identifier) {
+		
+		case "monthlyvotes":
+			return getMonthly(p);
+		case "totalvotes":
+			return getTotal(p);
+		case "hasvoted":
+			return hasVoted(p);
+		
+		}
+		return null;
 	}
-
 	
 	private String getMonthly(Player p) {
 		return String.valueOf(UltimateVotesAPI.getPlayerMonthlyVotes(p.getUniqueId()));

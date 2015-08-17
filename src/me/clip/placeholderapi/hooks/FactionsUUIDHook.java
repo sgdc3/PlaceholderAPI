@@ -1,8 +1,8 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,71 +11,26 @@ import org.bukkit.plugin.Plugin;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 
-public class FactionsUUIDHook{
+public class FactionsUUIDHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public FactionsUUIDHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public FactionsUUIDHook(InternalHook hook) {
+		super(hook);
 	}
 	
-	public void hook() {
+	@Override
+	public boolean hook() {
 
-		if (Bukkit.getPluginManager().isPluginEnabled("Factions")) {
+		boolean hooked = false;
+		
+		Plugin factions = Bukkit.getPluginManager().getPlugin(getPlugin());
 
-			Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
+		String version = factions.getDescription().getVersion();
 
-			String version = factions.getDescription().getVersion();
+		if (version.startsWith("1.6.9.5")) {
 
-			if (version.startsWith("1.6.9.5")) {
-
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(factions, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-						
-						if (p == null) {
-							return "";
-						}
-						
-						switch (identifier) {
-						
-						case "faction":
-							return getFaction(p);
-						case "power":
-							return getFPower(p);
-						case "powermax":
-							return getFPowerMax(p);
-						case "factionpower":
-							return getFacPower(p);
-						case "factionpowermax":
-							return getFacPowerMax(p);
-						case "title":
-							return getFactionTitle(p);
-						case "role":
-							return getFactionRole(p);
-						case "claims":
-							return getFactionClaims(p);
-						case "onlinemembers":
-							return getOnlineFactionMembers(p);
-						case "allmembers":
-							return getFactionMembers(p);
-						case "chat_tag":
-							return getChatTag(p);
-						}
-						return null;
-					}
-					
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into Factions 1.6.9.5 by drtshock for placeholders!");
-				}
-				
-			} else {
-				plugin.log.info("Could not hook into Factions 1.6.9.5 by drtshock!");
-			}
+			hooked = PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
 		}
+		return hooked;
 	}
 
 	private boolean hasFaction(Player p) {
@@ -183,5 +138,42 @@ public class FactionsUUIDHook{
 		return String.valueOf(fplayer.getChatTag());
 		
 		
+	}
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+		
+		if (p == null) {
+			return "";
+		}
+		
+		switch (identifier) {
+		
+		case "faction":
+			return getFaction(p);
+		case "power":
+			return getFPower(p);
+		case "powermax":
+			return getFPowerMax(p);
+		case "factionpower":
+			return getFacPower(p);
+		case "factionpowermax":
+			return getFacPowerMax(p);
+		case "title":
+			return getFactionTitle(p);
+		case "role":
+			return getFactionRole(p);
+		case "claims":
+			return getFactionClaims(p);
+		case "onlinemembers":
+			return getOnlineFactionMembers(p);
+		case "allmembers":
+			return getFactionMembers(p);
+		case "chat_tag":
+			return getChatTag(p);
+		}
+		return null;
+	
 	}
 }

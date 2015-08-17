@@ -1,51 +1,28 @@
 package me.clip.placeholderapi.hooks;
 
 import io.loyloy.nicky.Nicky;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class NickyHook {
+public class NickyHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public NickyHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public NickyHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("Nicky")) {
-			
-			Nicky nicky = (Nicky) Bukkit.getPluginManager().getPlugin("Nicky");
-			
-			if (nicky != null) {
-				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(nicky, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-						
-						if (p == null) {
-							return "";
-						}
-						
-						if (identifier.equals("nickname")) {
-							return getNickname(p);
-						}
-						return null;
-					}
-					
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into Nicky for nicknames!");
-				}
-			}
+		if (p == null) {
+			return "";
 		}
+		
+		if (identifier.equals("nickname")) {
+			return getNickname(p);
+		}
+		return null;
 	}
 
 	private String getNickname(Player p) {

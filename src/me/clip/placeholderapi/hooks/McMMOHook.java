@@ -1,6 +1,5 @@
 package me.clip.placeholderapi.hooks;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.gmail.nossr50.api.ExperienceAPI;
@@ -8,100 +7,91 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.util.player.UserManager;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-public class McMMOHook {
+public class McMMOHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-	
-	public McMMOHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public McMMOHook(InternalHook hook) {
+		super(hook);
 	}
-
-	public void hook() {
+	
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-			
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("mcmmo", new PlaceholderHook() {
-
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-					
-					if (p == null) {
-						return "";
-					}
-					
-					McMMOPlayer player = UserManager.getPlayer(p);
-					
-					if (player == null) {
-						return "";
-					}
-					
-					if (identifier.startsWith("level_")) {
-						
-						String skill = identifier.split("level_")[1];
-						
-						return getSkillLevel(player, skill);
-					}
-					
-					if (identifier.startsWith("rank_")) {
-						
-						String skill = identifier.split("rank_")[1];
-						
-						return getSkillRank(p, skill);
-					}
-
-					if (identifier.startsWith("xp_remaining_")) {
-						
-						String skill = identifier.split("xp_remaining_")[1];
-						
-						return getXPRemaining(p, skill);
-					}
-					
-					if (identifier.startsWith("xp_needed_")) {
-						
-						String skill = identifier.split("xp_needed_")[1];
-						
-						return getXPToNextLevel(p, skill);
-					}
-					
-					if (identifier.startsWith("xp_")) {
-						
-						String skill = identifier.split("xp_")[1];
-						
-						return getSkillXP(p, skill);
-					}
-					
-					switch (identifier) {
-					
-					case "power_level":
-						
-						return String.valueOf(player.getPowerLevel());
-					case "power_level_cap":
-						return String.valueOf(ExperienceAPI.getPowerLevelCap());
-					case "in_party":
-						return PartyAPI.inParty(p) ? "yes" : "no";	
-					case "party_name":
-						return PartyAPI.getPartyName(p) != null ? PartyAPI.getPartyName(p) : "";
-					case "party_leader":
-						return getPartyLeader(p);	
-					case "is_party_leader":
-						return getPartyLeader(p).equals(p.getName()) ? "yes" : "no";
-					case "party_size":
-						return PartyAPI.getMembersMap(p) != null ? String.valueOf(PartyAPI.getMembersMap(p).size()) : "0";
-					}
-
-					return null;
-				}	
-			}, true);
-			
-			if (hooked) {
-				plugin.getLogger().info("Hooked into mcMMO for placeholders!");
-			}
+		if (p == null) {
+			return "";
 		}
-	}
+		
+		McMMOPlayer player = null;
+		
+		try {
+			player = UserManager.getPlayer(p);
+		} catch (Exception e) {
+			return "";
+		}
+		
+		if (player == null) {
+			return "";
+		}
+		
+		if (identifier.startsWith("level_")) {
+			
+			String skill = identifier.split("level_")[1];
+			
+			return getSkillLevel(player, skill);
+		}
+		
+		if (identifier.startsWith("rank_")) {
+			
+			String skill = identifier.split("rank_")[1];
+			
+			return getSkillRank(p, skill);
+		}
+
+		if (identifier.startsWith("xp_remaining_")) {
+			
+			String skill = identifier.split("xp_remaining_")[1];
+			
+			return getXPRemaining(p, skill);
+		}
+		
+		if (identifier.startsWith("xp_needed_")) {
+			
+			String skill = identifier.split("xp_needed_")[1];
+			
+			return getXPToNextLevel(p, skill);
+		}
+		
+		if (identifier.startsWith("xp_")) {
+			
+			String skill = identifier.split("xp_")[1];
+			
+			return getSkillXP(p, skill);
+		}
+		
+		switch (identifier) {
+		
+		case "power_level":
+			
+			return String.valueOf(player.getPowerLevel());
+		case "power_level_cap":
+			return String.valueOf(ExperienceAPI.getPowerLevelCap());
+		case "in_party":
+			return PartyAPI.inParty(p) ? "yes" : "no";	
+		case "party_name":
+			return PartyAPI.getPartyName(p) != null ? PartyAPI.getPartyName(p) : "";
+		case "party_leader":
+			return getPartyLeader(p);	
+		case "is_party_leader":
+			return getPartyLeader(p).equals(p.getName()) ? "yes" : "no";
+		case "party_size":
+			return PartyAPI.getMembersMap(p) != null ? String.valueOf(PartyAPI.getMembersMap(p).size()) : "0";
+		}
+
+		return null;
+	}	
+
 	
 	private String getPartyLeader(Player p) {
 		

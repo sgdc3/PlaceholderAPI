@@ -1,161 +1,138 @@
 package me.clip.placeholderapi.hooks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.Cacheable;
+import me.clip.placeholderapi.internal.Cleanable;
+import me.clip.placeholderapi.internal.Configurable;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
+import me.clip.placeholderapi.internal.Taskable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import com.enjin.officialplugin.points.ErrorConnectingToEnjinException;
-import com.enjin.officialplugin.points.PlayerDoesNotExistException;
-import com.enjin.officialplugin.points.PointsAPI;
+import com.enjin.core.EnjinServices;
+import com.enjin.rpc.mappings.mappings.general.RPCData;
+import com.enjin.rpc.mappings.services.PointService;
 
-public class EnjinMinecraftPluginHook implements Listener {
+public class EnjinMinecraftPluginHook extends IPlaceholderHook implements Cleanable, Taskable, Cacheable, Configurable {
 
-	private PlaceholderAPIPlugin plugin;
-	
 	private final Map<String, Integer> points = new ConcurrentHashMap<String, Integer>();
-
-	private final Set<String> retrieve = new HashSet<String>();
 	
-	private static int taskId = -1;
+	private BukkitTask task;
 	
-	private static boolean registered;
+	private PointService service;
 	
-	public EnjinMinecraftPluginHook(PlaceholderAPIPlugin i) {
-		plugin = i;
-	}
+	private int fetchInterval;
 	
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
+	public EnjinMinecraftPluginHook(InternalHook hook) {
+		super(hook);
+		int interval = getPlaceholderAPI().getConfig().getInt(getIdentifier() + ".check_interval", 60);
 		
-		String name = e.getPlayer().getName();
-
-		if (points != null && points.containsKey(name)) {
-			points.remove(name);
+		if (interval > 0) {
+			fetchInterval = interval;
+		} else {
+			fetchInterval = 60;
 		}
 	}
 	
-	public void hook() {
+	@Override
+	public Map<String, Object> getDefaults() {
+		final Map<String, Object> defaults = new HashMap<String, Object>();
+		defaults.put("check_interval", 30);
+		return defaults;
+	}
+
+	
+	@Override
+	public boolean hook() {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("EnjinMinecraftPlugin")) {
-			
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook("EnjinMinecraftPlugin", new PlaceholderHook() {
+		try {
+			service = (PointService)EnjinServices.getService(PointService.class);
+		} catch (Exception ex) {
+			return false;
+		}
+		
+		return super.hook();
+	}
 
-					@Override
-						public String onPlaceholderRequest(Player p, String identifier) {
+	@Override
+	public void start() {
+		
+		stop();
+		
+		task = new BukkitRunnable() {
 
-							if (p == null) {
-								return "";
-							}
-
-							if (identifier.equals("points")) {
-								if (points == null) {
-									return "0";
-								}
-
-								if (points.containsKey(p.getName())) {
-									return String.valueOf(points.get(p.getName()));
-								} else {
-									if (!retrieve.contains(p.getName())) {
-										retrieve.add(p.getName());
-									}
-									return "0";
-								}
-
-							}
-
-							return null;
-						}
-					
-				}, true);
+			@Override
+			public void run() { 
 				
-				if (hooked) {
+				Set<String> names = new HashSet<String>(points.keySet());
+				
+				for (String name : names) {
 					
-					if (!registered) {
-						Bukkit.getPluginManager().registerEvents(this, plugin);
-						registered = true;
+					RPCData<Integer> data = service.get(name);
+					
+					if (data == null) {
+						continue;
 					}
 					
-					if (taskId == -1) {
-						
-						taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-
-							@Override
-							public void run() {
-								
-								List<String> just = new ArrayList<String>();
-								
-									if (retrieve != null && !retrieve.isEmpty()) {
-
-										Iterator<String> it = retrieve.iterator();
-
-										while (it.hasNext()) {
-
-											String p = it.next();
-
-											just.add(p);
-
-											try {
-												points.put(p, PointsAPI.getPointsForPlayer(p));
-											} catch (PlayerDoesNotExistException | ErrorConnectingToEnjinException e) {
-												points.put(p, 0);
-											}
-
-											it.remove();
-										}
-
-									}
-								
-									if (points != null && !points.isEmpty()) {
-
-										Iterator<String> cached = points.keySet().iterator();
-
-										Map<String, Integer> updated = new HashMap<String, Integer>();
-
-										while (cached.hasNext()) {
-											String p = cached.next();
-
-											if (!just.contains(p)) {
-
-												try {
-													updated.put(p, PointsAPI.getPointsForPlayer(p));
-												} catch (PlayerDoesNotExistException | ErrorConnectingToEnjinException e) {
-												}
-											}
-										}
-
-										if (!updated.isEmpty()) {
-											for (Entry<String, Integer> p : updated.entrySet()) {
-												points.put(p.getKey(), p.getValue());
-											}
-											updated = null;
-										}
-									}
-									
-									just = null;
-								}
-								
-							
-						}, 20L, 20L * 60).getTaskId();
-						
+					if (data.getError() == null) {
+						points.put(name, data.getResult());
 					}
-					plugin.log.info("Hooked into EnjinMinecraftPlugin for placeholders!");
 				}
 			}
+			
+		}.runTaskTimerAsynchronously(getPlaceholderAPI(), 100L, 20L*fetchInterval);
+	}
+
+	@Override
+	public void stop() {
+		if (task != null) {
+			try {
+				task.cancel();
+			} catch (Exception ex) {	
+			}
+			task = null;
+		}
+	}
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+
+		if (p == null) {
+			return "";
+		}
+
+		if (identifier.equals("points")) {
+
+			if (points.containsKey(p.getName())) {
+				return String.valueOf(points.get(p.getName()));
+			} else {
+				points.put(p.getName(), 0);
+				return "0";
+			}
+
+		}
+
+		return null;
+	}
+
+	@Override
+	public void clear() {
+		if (points != null) {
+			points.clear();
+		}
+	}
+
+	@Override
+	public void cleanup(Player p) {
+		points.remove(p.getName());
 	}
 }

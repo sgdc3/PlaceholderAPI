@@ -2,72 +2,55 @@ package me.clip.placeholderapi.hooks;
 
 import java.util.List;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class TownyHook {
+public class TownyHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-	
-	public TownyHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public TownyHook(InternalHook hook) {
+		super(hook);
 	}
 	
-	public void hook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 		
-		if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
-
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("Towny", new PlaceholderHook() {
-
-						@Override
-						public String onPlaceholderRequest(Player p, String identifier) {
-							
-							if (p == null) {
-								return "";
-							}
-
-							switch (identifier) {
-							
-							case "town":
-								return getPlayersTown(p);
-							case "friends":
-								return getPlayersFriends(p);
-							case "nation":
-								return getPlayersNation(p);
-							case "title":
-								return getPlayersTownyTitle(p);
-							case "town_residents":
-								return getTownResidents(p);
-							case "town_size":
-								return getTownSize(p);
-							case "town_tag":
-								return getTownTag(p);
-							case "town_balance":
-								return getTownBankBalance(p);
-							case "town_mayor":
-								return getTownMayor(p);
-							case "surname":
-								return getPlayersSurname(p);
-							case "town_rank":
-								return getTownRank(p);
-							case "nation_rank":
-								return getNationRank(p);
-							}	
-							
-							return null;
-						}
-					}, true);
-			
-			if (hooked) {
-				plugin.log.info("Hooked into Towny for placeholders!");
-			}
+		if (p == null) {
+			return "";
 		}
+
+		switch (identifier) {
+		
+		case "town":
+			return getPlayersTown(p);
+		case "friends":
+			return getPlayersFriends(p);
+		case "nation":
+			return getPlayersNation(p);
+		case "title":
+			return getPlayersTownyTitle(p);
+		case "town_residents":
+			return getTownResidents(p);
+		case "town_size":
+			return getTownSize(p);
+		case "town_tag":
+			return getTownTag(p);
+		case "town_balance":
+			return getTownBankBalance(p);
+		case "town_mayor":
+			return getTownMayor(p);
+		case "surname":
+			return getPlayersSurname(p);
+		case "town_rank":
+			return getTownRank(p);
+		case "nation_rank":
+			return getNationRank(p);
+		}	
+		
+		return null;
 	}
 
 	private String getPlayersTown(Player p) {

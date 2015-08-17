@@ -2,6 +2,7 @@ package me.clip.placeholderapi;
 
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,63 +26,75 @@ public class PlaceholderAPICommands implements CommandExecutor {
 
 
 		if (args.length == 0) {
-			
-			sms(s, "&8&m-----------------------------------------------------");
 			sms(s, "&cClips &fPlaceholder&7API &f&o"+plugin.getDescription().getVersion());
 			sms(s, "&7Created by &fextended_clip");
-			sms(s, "&8&m-----------------------------------------------------");
 			return true;
 			
 		} else {
 
-			if (s instanceof Player) {
-
-				Player p = (Player) s;
-
-				if (!p.hasPermission("placeholderapi.admin")) {
-					sms(s, "&cYou don't have permission to do that!");
-					return true;
-				}
-			}
-			
 			if (args[0].equalsIgnoreCase("help")) {
-				sms(s, "&8&m-----------------------------------------------------");
-				sms(s, "&cClips &fPlaceholder&7API &eHelp");
-				sms(s, "&c/placeholderapi");
+				sms(s, "&cClips &fPlaceholder&7API &eHelp &c(&f" + plugin.getDescription().getVersion() + "&c)");
+				sms(s, "&c/papi");
 				sms(s, "&fView plugin info/version info");
-				sms(s, "&c/placeholderapi list");
+				sms(s, "&c/papi list");
 				sms(s, "&fList all placeholder hook plugins that are currently active");
-				sms(s, "&c/placeholderapi reload");
+				sms(s, "&c/papi parse <...args>");
+				sms(s, "&fParse a String with placeholders");
+				sms(s, "&c/papi reload");
 				sms(s, "&fReload the config settings");
-				sms(s, "&8&m-----------------------------------------------------");
 				
+			} else if (args.length > 1 && args[0].equalsIgnoreCase("parse")) {
+
+				if (!(s instanceof Player)) {
+					sms(s, "&cThis command can only be used in game!");
+					return true;
+				} else {
+					if (!s.hasPermission("placeholderapi.parse")) {
+						sms(s, "&cYou don't have permission to do that!");
+						return true;
+					}
+				}
+				
+				Player p = (Player) s;
+				
+				String parse = StringUtils.join(args, " ", 1, args.length);
+				
+				sms(s, "&r" + PlaceholderAPI.setPlaceholders(p, parse));
+				
+				return true;
 			} else if (args[0].equalsIgnoreCase("reload")) {
 
+				if (s instanceof Player) {
+					if (!s.hasPermission("placeholderapi.reload")) {
+						sms(s, "&cYou don't have permission to do that!");
+						return true;
+					}
+				}
 				
-				sms(s, "&8&m-----------------------------------------------------");
 				sms(s, "&cClips &fPlaceholder&7API &bconfiguration reloaded!");
 				plugin.reloadConf(s);
-				sms(s, "&8&m-----------------------------------------------------");
 				
-				new CheckTask(plugin).runTaskLater(plugin, 100L);
+				//new CheckTask(plugin).runTaskLaterAsynchronously(plugin, 100L);
 
 			} else if (args[0].equalsIgnoreCase("list")) {
-				sms(s, "&8&m-----------------------------------------------------");
+				
+				if (s instanceof Player) {
+					if (!s.hasPermission("placeholderapi.list")) {
+						sms(s, "&cYou don't have permission to do that!");
+						return true;
+					}
+				}
 				
 				Set<String> registered = PlaceholderAPI.getRegisteredPlaceholderPlugins();
 				
 				if (registered == null || registered.isEmpty()) {
 					sms(s, "&7There are no placeholder hooks currently registered!");
-					sms(s, "&8&m-----------------------------------------------------");
 					return true;
 				}
 				sms(s, registered.size()+" &7Placeholder hooks registered:");
 				sms(s, registered.toString());
-				sms(s, "&8&m-----------------------------------------------------");
 			} else {
-				sms(s, "&8&m-----------------------------------------------------");
-				sms(s, "&cIncorrect usage! &7/placeholderhook help");
-				sms(s, "&8&m-----------------------------------------------------");
+				sms(s, "&cIncorrect usage! &7/papi help");
 			}
 		}
 		

@@ -17,8 +17,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class JavascriptPlaceholdersConfig {
 
 	private PlaceholderAPIPlugin plugin;
-	private FileConfiguration config = null;
-	private File file = null;
+	
+	private FileConfiguration config;
+	
+	private File file;
 
 	public JavascriptPlaceholdersConfig(PlaceholderAPIPlugin i) {
 		plugin = i;
@@ -162,6 +164,7 @@ public class JavascriptPlaceholdersConfig {
 			return 0;
 		}
 		
+		//create the directory the files are in
 		File dir = new File(plugin.getDataFolder() + File.separator + "javascripts");
 		
 		try {
@@ -173,8 +176,6 @@ public class JavascriptPlaceholdersConfig {
 		} catch (SecurityException e) {
 			plugin.getLogger().severe("Could not create directory: plugins" + File.separator + "PlaceholderAPI" + File.separator + "javascripts");
 		}
-
-		JavascriptPlaceholders.cleanup();
 		
 		for (String identifier : config.getKeys(false)) {
 			

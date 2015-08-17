@@ -1,48 +1,31 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class QuickSellHook {
+public class QuickSellHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public QuickSellHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public QuickSellHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("QuickSell")) {
-
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("QuickSell", new PlaceholderHook() {
-
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-					
-					if (p == null) {
-						return "";
-					}
-
-					if (identifier.equals("booster")) {
-						return getBooster(p);
-					}
-					if (identifier.equals("booster_time")) {
-						return getBoosterTimeLeft(p);
-					}
-					return null;
-				}
-				
-			}, true);
-			
-			if (hooked) {
-				plugin.log.info("Hooked into QuickSell for placeholders!");
-			}
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
 		}
+
+		if (identifier.equals("booster")) {
+			return getBooster(p);
+		}
+		if (identifier.equals("booster_time")) {
+			return getBoosterTimeLeft(p);
+		}
+		return null;
 	}
 
 

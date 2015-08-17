@@ -2,66 +2,82 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/acidisland.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/askyblock.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/AutoSell-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/ChatReaction.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Essentials-1.8.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EZBlocks.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EZPrestige.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Factions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/FactionsUUID.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/GAListener.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MassiveCore.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/IslandWorld.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Jobs2.24.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/killStats.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/LWC.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MarriageMaster.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/mcMMO.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Nicky.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/PlayerPoints.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/PlotMe-Core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/PlotSquared.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/PrisonGangs.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/pvpstats.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/QuickSell_v1.9.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/RoyalCommands.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SimpleCoinsAPI.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SimpleSuffix.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SkyWarsReloaded-V1.85.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SQLPerms.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SQLTokens.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Teams.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/TokenEnchant.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Towny.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/UltimateVotes.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/uSkyBlock.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/VoteParty.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/WickedSkyWars.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/CheckNameHistory.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/SimpleClans.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Skript.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8.3-R0.1-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8-R0.1-SNAPSHOT-latest.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8-R0.1-SNAPSHOT-latest.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/bukkit-1.7.10-R0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot1649.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/spigot-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Ryan/Desktop/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-api-1.8.4-R0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Simple-Prefix.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/My Plugins/DeluxeTags.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/McInfected.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/McInfected-Ranks.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/EZRanksLite.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/Heroes.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/OnTime.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/MineCrates.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/gangsplus.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/EnjinMinecraftPlugin.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/Autorank.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/EZRanksPro.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot-1.8-R0.1-SNAPSHOT-latest.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/spigot1649.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/acidisland.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/askyblock.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Autorank.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/AutoSell.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/ChatColor.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/ChatReaction.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/CheckNameHistory.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/DeluxeTags.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Essentials-1.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/EZBlocks.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/EZPrestige.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/EZRanksPro.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Factions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/FactionsUUID.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/GAListener.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Heroes.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/IslandWorld.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Jobs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/killStats.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/LWC.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/MarriageMaster.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/MassiveCore.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/McInfected.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/McInfected-Ranks.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/mcMMO.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/MVdWPlaceholderAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Nicky.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/OnTime.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PlayerPoints.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PlotMe-Core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PlotSquared.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PrisonGangs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/pvpstats.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/QuickSell_v1.10.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/RoyalCommands.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Simple-Prefix.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SimpleClans.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SimpleCoinsAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SimpleSuffix.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SkillAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SkyWarsReloaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SQLPerms.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SQLTokens.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/TokenEnchant-release.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Towny.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/TownyChat.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/UltimateVotes.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/uSkyBlock.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Vault.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/VoteParty.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/WickedSkyWars.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/EZRanksLite.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/LeaderHeads.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/GangsPlus.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/NickNamer_v2.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/VoteRoulette.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/MineCrates2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/SuperbVote-0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/lombok.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/stTitles-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/TokenManager.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/SellAllV1.7.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Tokens.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PointsAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/PrisonMines.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/Marriage.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/EnjinMinecraftPlugin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PlaceholderAPI dependencies/HolographicDisplays.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/PluginDependencies/HolographicDisplays.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Desktop/Holograms.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,56 +1,33 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.swifteh.GAL.GAL;
 import com.swifteh.GAL.VoteAPI;
 
-public class GAListenerHook {
+public class GAListenerHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-	
-	public GAListenerHook(PlaceholderAPIPlugin i) {
-		plugin = i;
-	}
-	
-	public void hook() {
-		
-		if (Bukkit.getPluginManager().isPluginEnabled("GAListener")) {
-				
-			GAL ga = (GAL) Bukkit.getPluginManager().getPlugin("GAListener");
-			
-			if (ga != null) {
-				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(ga, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-						
-						if (p == null) {
-							return "";
-						}
-						
-						if (identifier.equals("votes")) {
-							return getVotes(p);
-						}
-						return null;
-					}
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into GAListener for placeholders!");
-				}
-			}
-			
-		}
+	public GAListenerHook(InternalHook hook) {
+		super(hook);
 	}
 	
 	private String getVotes(Player p) {
 		return String.valueOf(VoteAPI.getVoteTotal(p));
+	}
+	
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+		if (p == null) {
+			return "";
+		}
+		
+		if (identifier.equals("votes")) {
+			return getVotes(p);
+		}
+		return null;
+	
 	}
 }

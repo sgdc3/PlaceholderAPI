@@ -1,62 +1,45 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.bimmr.mcinfected.IPlayers.IStats;
 import com.bimmr.mcinfected.IPlayers.IStats.Stat;
 
-public class McInfectedHook {
+public class McInfectedHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public McInfectedHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public McInfectedHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
 
-		if (Bukkit.getPluginManager().isPluginEnabled("McInfected")) {
-
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("McInfected", new PlaceholderHook() {
-
-				@Override
-				public String onPlaceholderRequest(Player p, String identifier) {
-					
-					if (p == null) {
-						return "";
-					}
-					
-					switch (identifier) {
-
-					case "score":
-						return getScore(p);
-					case "kills":
-						return getKills(p);
-					case "deaths":
-						return getDeaths(p);
-					case "wins":
-						return getWins(p);
-					case "losses":
-						return getLosses(p);
-					case "killstreak":
-						return getKillstreak(p);
-					case "time":
-						return getTime(p);
-
-					}
-					return null;
-				}
-			}, true);
-
-			if (hooked) {
-				plugin.log.info("Hooked into McInfected for placeholders!");
-			}
+		if (p == null) {
+			return "";
 		}
+		
+		switch (identifier) {
+
+		case "score":
+			return getScore(p);
+		case "kills":
+			return getKills(p);
+		case "deaths":
+			return getDeaths(p);
+		case "wins":
+			return getWins(p);
+		case "losses":
+			return getLosses(p);
+		case "killstreak":
+			return getKillstreak(p);
+		case "time":
+			return getTime(p);
+
+		}
+		return null;
 	}
 
 	private String getScore(Player p) {

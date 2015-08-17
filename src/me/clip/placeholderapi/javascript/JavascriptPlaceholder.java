@@ -113,9 +113,9 @@ public class JavascriptPlaceholder {
             }
                         
         } catch (Exception ex) {
-        	PlaceholderAPIPlugin.getInstance().log.severe("Error in javascript placeholder - " + this.identifier);
+        	PlaceholderAPIPlugin.getInstance().getLogger().severe("Error in javascript placeholder - " + this.identifier);
         	ex.printStackTrace();
-        	return null;
+        	return "invalid javascript";
         }
 	}
 }

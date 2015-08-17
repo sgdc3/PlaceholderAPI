@@ -1,89 +1,18 @@
 package me.clip.placeholderapi.hooks;
 
-import me.brcdev.gangs.GangsPlugin;
-import me.brcdev.gangs.GangsPlusAPI;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
+import net.brcdev.gangs.GangsPlusAPI;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class GangsPlusHook {
+public class GangsPlusHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public GangsPlusHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public GangsPlusHook(InternalHook hook) {
+		super(hook);
 	}
-
-	public void hook() {
-
-		if (Bukkit.getPluginManager().isPluginEnabled("GangsPlus")) {
-
-			GangsPlugin gp = (GangsPlugin) Bukkit.getPluginManager().getPlugin("GangsPlus");
-			
-			if (gp != null) {
-				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(gp, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-						
-						if (p == null) {
-							return "";
-						}
-						
-						switch (identifier) {
-						
-						case "in_gang":
-							return inGang(p);
-						case "gang":
-							return getGang(p);
-						case "gang_tag":
-							return getGangTag(p);
-						case "gang_rank":
-							return getGangRank(p);
-						case "gang_homes":
-							return getGangHomes(p);
-						case "gang_friendlyfire":
-							return getGangFF(p);
-						case "gang_online":
-							return getGangOnline(p);
-						case "gang_size":
-							return getGangSize(p);
-						case "gang_leader":
-							return getGangLeader(p);
-						case "gang_level":
-							return getGangLevel(p);
-						case "gang_wins":
-							return getGangWins(p);
-						case "gang_losses":
-							return getGangLosses(p);
-						case "gang_wlr":
-							return getGangWLR(p);
-						case "gang_kills":
-							return getGangKills(p);
-						case "gang_deaths":
-							return getGangDeaths(p);
-						case "gang_kdr":
-							return getGangKDR(p);
-						case "gang_bank_money":
-							return getGangBankMoney(p);
-						case "gang_business_money":
-							return getGangBusinessMoney(p);
-						}
-						return null;
-					}
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into GangsPlus for placeholders!");
-				}	
-			}
-		}
-	}
-
+	
 	private String inGang(Player p) {
 		return GangsPlusAPI.isInGang(p) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
 	}
@@ -106,14 +35,14 @@ public class GangsPlusHook {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "";
 		}
-		return GangsPlusAPI.getPlayersGang(p).getLeadersName();
+		return GangsPlusAPI.getPlayersGang(p).getOwnerMemberData().getName();
 	}
 	
 	private String getGangSize(Player p) {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getMembersNumber());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getMembers().size());
 	}
 	
 	private String getGangKills(Player p) {
@@ -134,7 +63,7 @@ public class GangsPlusHook {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getKdr());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getKdRatio());
 	}
 	
 	private String getGangBankMoney(Player p) {
@@ -142,13 +71,6 @@ public class GangsPlusHook {
 			return "0";
 		}
 		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getBankMoney());
-	}
-	
-	private String getGangBusinessMoney(Player p) {
-		if (!GangsPlusAPI.isInGang(p)) {
-			return "0";
-		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getBusinessMoney());
 	}
 	
 	private String getGangLevel(Player p) {
@@ -162,35 +84,35 @@ public class GangsPlusHook {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getLost());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getFightsLost());
 	}
 	
 	private String getGangWLR(Player p) {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getWlr());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getWlRatio());
 	}
 	
 	private String getGangWins(Player p) {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getWon());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getFightsWon());
 	}
 	
 	private String getGangOnline(Player p) {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "0";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getOnlinePlayers().size());
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getOnlineMembers().size());
 	}
 	
 	private String getGangRank(Player p) {
 		if (!GangsPlusAPI.isInGang(p)) {
 			return "";
 		}
-		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getPlayersRankName(p));
+		return String.valueOf(GangsPlusAPI.getPlayersGang(p).getMemberData(p).getRank());
 	}
 	
 	private String getGangHomes(Player p) {
@@ -209,6 +131,53 @@ public class GangsPlusHook {
 		}
 		
 		return GangsPlusAPI.getPlayersGang(p).isFriendlyFire() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+	}
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+		if (p == null) {
+			return "";
+		}
+		
+		switch (identifier) {
+		
+		case "in_gang":
+			return inGang(p);
+		case "gang":
+			return getGang(p);
+		case "gang_tag":
+			return getGangTag(p);
+		case "gang_rank":
+			return getGangRank(p);
+		case "gang_homes":
+			return getGangHomes(p);
+		case "gang_friendlyfire":
+			return getGangFF(p);
+		case "gang_online":
+			return getGangOnline(p);
+		case "gang_size":
+			return getGangSize(p);
+		case "gang_leader":
+			return getGangLeader(p);
+		case "gang_level":
+			return getGangLevel(p);
+		case "gang_wins":
+			return getGangWins(p);
+		case "gang_losses":
+			return getGangLosses(p);
+		case "gang_wlr":
+			return getGangWLR(p);
+		case "gang_kills":
+			return getGangKills(p);
+		case "gang_deaths":
+			return getGangDeaths(p);
+		case "gang_kdr":
+			return getGangKDR(p);
+		case "gang_bank_money":
+			return getGangBankMoney(p);
+		}
+		return null;
 	}
 	
 }

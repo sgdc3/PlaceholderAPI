@@ -1,67 +1,16 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.gmail.dejayyy.killStats.ksMain;
 
-public class KillStatsHook {
+public class KillStatsHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-	
-	public KillStatsHook(PlaceholderAPIPlugin i) {
-		plugin = i;
-	}
-	
-	public void hook() {
-		
-		if (Bukkit.getPluginManager().isPluginEnabled("killStats")) {
-			
-			ksMain pl = (ksMain) Bukkit.getPluginManager().getPlugin("killStats");
-			
-			if (pl != null) {
-				
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook(pl, new PlaceholderHook() {
-
-					@Override
-					public String onPlaceholderRequest(Player p, String identifier) {
-						
-						if (p == null) {
-							return "";
-						}
-						
-						switch (identifier) {
-						
-						case "kills":
-							return getKills(p);
-						case "killrank":
-							return getKillsRank(p);
-						case "deaths":
-							return getDeaths(p);
-						case "deathrank":
-							return getDeathsRank(p);
-						case "streak":
-							return getStreak(p);
-						case "streakrank":
-							return getStreakRank(p);
-						case "kdr":
-							return getKDR(p);
-						case "kdrrank":
-							return getKDRRank(p);
-						}
-						return null;
-					}
-				}, true);
-				
-				if (hooked) {
-					plugin.log.info("Hooked into killStats for placeholders!");
-				}
-			}
-		}
+	public KillStatsHook(InternalHook hook) {
+		super(hook);
 	}
 	
 	private String getKills(Player p) {
@@ -95,6 +44,33 @@ public class KillStatsHook {
 	private String getStreakRank(Player p) {
 		return String.valueOf(ksMain.api.getStreakRank(p));
 	}
-	
-	
+
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+
+		if (p == null) {
+			return "";
+		}
+		
+		switch (identifier) {
+		
+		case "kills":
+			return getKills(p);
+		case "killrank":
+			return getKillsRank(p);
+		case "deaths":
+			return getDeaths(p);
+		case "deathrank":
+			return getDeathsRank(p);
+		case "streak":
+			return getStreak(p);
+		case "streakrank":
+			return getStreakRank(p);
+		case "kdr":
+			return getKDR(p);
+		case "kdrrank":
+			return getKDRRank(p);
+		}
+		return null;
+	}
 }

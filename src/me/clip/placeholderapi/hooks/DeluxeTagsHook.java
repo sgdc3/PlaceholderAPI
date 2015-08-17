@@ -3,61 +3,81 @@ package me.clip.placeholderapi.hooks;
 import java.util.List;
 
 import me.clip.deluxetags.DeluxeTag;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class DeluxeTagsHook {
+public class DeluxeTagsHook extends IPlaceholderHook {
 	
-	private PlaceholderAPIPlugin plugin;
-
-	public DeluxeTagsHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public DeluxeTagsHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-		
-		if (Bukkit.getPluginManager().isPluginEnabled("DeluxeTags")) {
+	@Override
+	public String onPlaceholderRequest(Player p, String s) {
 
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook(
-					"DeluxeTags", new PlaceholderHook() {
-						@Override
-						public String onPlaceholderRequest(Player p, String s) {
-
-							if (p == null) {
-								return "";
-							}
-							
-							switch (s) {
-
-							case "tag":
-								return DeluxeTag.getPlayerDisplayTag(p);
-
-							case "identifier":
-								String tagId = DeluxeTag.getPlayerTagIdentifier(p);
-								return tagId != null ? tagId : "";
-
-							case "description":
-								return DeluxeTag.getPlayerTagDescription(p);
-
-							case "amount":
-								List<String> tmp = DeluxeTag.getAvailableTagIdentifiers(p);
-								return tmp != null ? String.valueOf(tmp.size())
-										: "0";
-							}
-
-							return "&cIncorrect placeholder!";
-						}
-					}, true);
-
-			if (hooked) {
-				plugin.log.info("Hooked into DeluxeTags for placeholders!");
-			}
+		if (p == null) {
+			return "";
 		}
-	}
+		
+		if (s.startsWith("has_tag_")) {
+			s = s.replace("has_tag_", "");
+			
+			DeluxeTag tag = DeluxeTag.getLoadedTag(s);
+			
+			if (tag == null) {
+				return "invalid tag";
+			}
+			
+			return tag.hasTagPermission(p) ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+		}
+		
+		if (s.startsWith("get_tag_")) {
+			s = s.replace("get_tag_", "");
+			
+			DeluxeTag tag = DeluxeTag.getLoadedTag(s);
+			
+			if (tag == null) {
+				return "invalid tag";
+			}
+			
+			return tag.getDisplayTag();
+		}
+		
+		if (s.startsWith("get_description_")) {
+			s = s.replace("get_description_", "");
+			
+			DeluxeTag tag = DeluxeTag.getLoadedTag(s);
+			
+			if (tag == null) {
+				return "invalid tag";
+			}
+			
+			return tag.getDescription();
+		}
+		
+		switch (s) {
 
+		case "tag":
+			return DeluxeTag.getPlayerDisplayTag(p);
+
+		case "identifier":
+			String tagId = DeluxeTag.getPlayerTagIdentifier(p);
+			return tagId != null ? tagId : "";
+
+		case "description":
+			return DeluxeTag.getPlayerTagDescription(p);
+
+		case "amount":
+			List<String> tmp = DeluxeTag.getAvailableTagIdentifiers(p);
+			return tmp != null ? String.valueOf(tmp.size())
+					: "0";
+		}
+
+		return null;
+	
+	}
 }
 

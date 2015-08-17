@@ -1,58 +1,53 @@
 package me.clip.placeholderapi.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 import me.staartvin.simplesuffix.SimpleSuffix;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class SimpleSuffixHook {
+public class SimpleSuffixHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-	
 	private SimpleSuffix ss;
 	
-	public SimpleSuffixHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public SimpleSuffixHook(InternalHook hook) {
+		super(hook);
 	}
 	
-	public void hook() {
-		if (Bukkit.getPluginManager().isPluginEnabled("Simple Suffix")) {
-
-			ss = (SimpleSuffix) Bukkit.getPluginManager().getPlugin("Simple Suffix");
+	@Override
+	public boolean hook() {
+		
+		boolean hooked = false;
+		
+		ss = (SimpleSuffix) Bukkit.getPluginManager().getPlugin(getPlugin());
 			
-			if (ss != null) {
+		if (ss != null) {
 
-				boolean hooked = PlaceholderAPI.registerPlaceholderHook("SimpleSuffix", new PlaceholderHook() {
-
-							@Override
-							public String onPlaceholderRequest(Player p, String identifier) {
-								
-								if (p == null) {
-									return "";
-								}
-								
-								if (identifier.equals("prefix")) {
-									return getPrefix(p);
-								} else if (identifier.equals("suffix")) {
-									return getSuffix(p);
-								}
-								return null;
-							}
-
-						}, true);
-
-				if (hooked) {
-					plugin.log.info("Hooked into Simple Suffix for placeholders!");
-				}
-			}
+			hooked = PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
 		}
+		
+		return hooked;
+	}
+	
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
+		}
+		
+		if (identifier.equals("prefix")) {
+			return getPrefix(p);
+		} else if (identifier.equals("suffix")) {
+			return getSuffix(p);
+		}
+		return null;
 	}
 	
 	private String getPrefix(Player p) {
-		String pre = ss.permHandler.getPrefix(p);
+		String pre = ss.getPermHandler().getPrefix(p);
 		if (pre == null) {
 			return "";
 		}
@@ -60,7 +55,7 @@ public class SimpleSuffixHook {
 	}
 	
 	private String getSuffix(Player p) {
-		String su = ss.permHandler.getSuffix(p);
+		String su = ss.getPermHandler().getSuffix(p);
 		if (su == null) {
 			return "";
 		}

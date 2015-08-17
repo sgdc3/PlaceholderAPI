@@ -1,55 +1,38 @@
 package me.clip.placeholderapi.hooks;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.internal.IPlaceholderHook;
+import me.clip.placeholderapi.internal.InternalHook;
 import net.slipcor.pvpstats.PVPData;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PvPStatsHook {
+public class PvPStatsHook extends IPlaceholderHook {
 
-	private PlaceholderAPIPlugin plugin;
-
-	public PvPStatsHook(PlaceholderAPIPlugin i) {
-		plugin = i;
+	public PvPStatsHook(InternalHook hook) {
+		super(hook);
 	}
 
-	public void hook() {
-
-		if (Bukkit.getPluginManager().isPluginEnabled("pvpstats")) {
-
-			boolean hooked = PlaceholderAPI.registerPlaceholderHook("pvpstats", new PlaceholderHook() {
-
-						@Override
-						public String onPlaceholderRequest(Player p, String identifier) {
-							
-							if (p == null) {
-								return "";
-							}
-
-							switch (identifier) {
-
-							case "kills":
-								return getKills(p);
-							case "deaths":
-								return getDeaths(p);
-							case "elo":
-								return getElo(p);
-							case "killstreak":
-								return getStreak(p);
-							case "maxstreak":
-								return getMaxStreak(p);
-							}
-							return null;
-						}
-					}, true);
-
-			if (hooked) {
-				plugin.log.info("Hooked into pvpstats for placeholders!");
-			}
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		
+		if (p == null) {
+			return "";
 		}
+
+		switch (identifier) {
+
+		case "kills":
+			return getKills(p);
+		case "deaths":
+			return getDeaths(p);
+		case "elo":
+			return getElo(p);
+		case "killstreak":
+			return getStreak(p);
+		case "maxstreak":
+			return getMaxStreak(p);
+		}
+		return null;
 	}
 
 	private String getKills(Player p) {
