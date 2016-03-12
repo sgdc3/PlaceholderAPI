@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import me.clip.placeholderapi.configuration.PlaceholderAPIConfig;
-import me.clip.placeholderapi.injector.PlaceholderInjector;
-import me.clip.placeholderapi.internal.InternalHook;
-import me.clip.placeholderapi.internal.NMSVersion;
+import me.clip.placeholderapi.expansion.ExpansionManager;
+import me.clip.placeholderapi.expansion.NMSVersion;
 import me.clip.placeholderapi.metricslite.MetricsLite;
 import me.clip.placeholderapi.updatechecker.UpdateChecker;
 
@@ -22,25 +21,25 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PlaceholderAPIPlugin extends JavaPlugin {
 	
+	private static PlaceholderAPIPlugin instance;
+	
 	private PlaceholderAPIConfig config;
 	
-	private PlaceholderInjector injector;
+	private ExpansionManager expansionManager;
 	
 	private static SimpleDateFormat dateFormat;
 	
 	private static String booleanTrue;
 	
 	private static String booleanFalse;
-	
-	private static PlaceholderAPIPlugin instance;
-	
+
 	private static NMSVersion nmsVersion;
 	
 	private static boolean isSpigot;
 	
 	@Override
-	public void onEnable() {
-
+	public void onLoad() {
+		
 		instance = this;
 		
 		if (checkForSpigot()) {
@@ -51,17 +50,23 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		
 		config = new PlaceholderAPIConfig(this);
 		
+		expansionManager = new ExpansionManager(this);
+	}
+	
+	@Override
+	public void onEnable() {
+
 		config.loadDefConfig();
 		
 		setupOptions();
 		
 		getCommand("placeholderapi").setExecutor(new PlaceholderAPICommands(this));
 		
-		getLogger().info("Internal placeholder registration initializing...");
-		
 		new PlaceholderListener(this);
 		
-		InternalHook.registerHooks();
+		getLogger().info("Internal placeholder registration initializing...");
+		
+		expansionManager.registerAllExpansions();
 		
 		if (config.checkUpdates()) {
 			new UpdateChecker(this);
@@ -70,24 +75,13 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		if (!startMetricsLite()) {
 			getLogger().warning("Could not start MetricsLite");
 		}
-		
-		if (config.injectorEnabled()) {
-			if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-				injector = new PlaceholderInjector(this);
-				injector.setup();
-			} else {
-				getLogger().warning("Could not hook into ProtocolLib!");
-				getLogger().info("Placeholder injector requires ProtocolLib in order to be used!");
-			}
-		}
 	}
 	
 	@Override
 	public void onDisable() {
-		if (injector != null) {
-			injector.disable();
-		}
 		PlaceholderAPI.unregisterAll();
+		expansionManager.clean();
+		expansionManager = null;
 		Bukkit.getScheduler().cancelTasks(this);
 		instance = null;
 	}
@@ -97,7 +91,8 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 		saveConfig();
 		setupOptions();
 		PlaceholderAPI.resetInternalPlaceholderHooks();
-		InternalHook.registerHooks();
+		expansionManager.clean();
+		expansionManager.registerAllExpansions();
 		s.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.getRegisteredPlaceholderPlugins().size()+" &aplaceholder hooks successfully registered!"));
 	}
 	
@@ -213,5 +208,9 @@ public class PlaceholderAPIPlugin extends JavaPlugin {
 	 */
 	public static boolean isSpigot() {
 		return isSpigot;
+	}
+	
+	public ExpansionManager getExpansionManager() {
+		return expansionManager;
 	}
 }

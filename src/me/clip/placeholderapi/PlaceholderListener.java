@@ -4,11 +4,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
+import me.clip.placeholderapi.expansion.Cacheable;
+import me.clip.placeholderapi.expansion.Cleanable;
+import me.clip.placeholderapi.expansion.ExpansionManager;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.clip.placeholderapi.expansion.Taskable;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-import me.clip.placeholderapi.internal.Cacheable;
-import me.clip.placeholderapi.internal.Cleanable;
-import me.clip.placeholderapi.internal.InternalHook;
-import me.clip.placeholderapi.internal.Taskable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -39,6 +40,17 @@ public class PlaceholderListener implements Listener {
 		}
 	}
 	
+	@EventHandler
+	public void onEnable(PluginEnableEvent event) {
+		ExpansionManager m = plugin.getExpansionManager();
+		PlaceholderExpansion e = m.getWaitingExpansion(event.getPlugin().getName().toLowerCase());
+		if (e != null && e.canRegister()) {
+			if (e.isRegistered() || m.registerExpansion(e)) {
+				m.removeExpansion(e.getPlugin());
+			}
+		}
+	}
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPluginUnload(PluginDisableEvent e) {
 		
@@ -52,55 +64,40 @@ public class PlaceholderListener implements Listener {
 			return;
 		}
 			
-		if (PlaceholderAPI.unregisterPlaceholderHook(n)) {
+		if (PlaceholderAPI.unregisterPlaceholderHook(n.toLowerCase())) {
 			plugin.getLogger().info("Unregistered placeholder hook to: "+n);
 			return;
 		}
-		
-		InternalHook iHook = InternalHook.getHookByPluginName(n);
-
-		if (iHook == null) {
 			
-			Map<String, PlaceholderHook> hooks = PlaceholderAPI.getPlaceholders();
+		Map<String, PlaceholderHook> hooks = PlaceholderAPI.getPlaceholders();
 			
-			if (hooks == null) {
-				return;
-			}
+		if (hooks == null) {
+			return;
+		}
 			
-			for (Entry<String, PlaceholderHook> hook : hooks.entrySet()) {
-				if (hook.getValue() instanceof EZPlaceholderHook) {
-					EZPlaceholderHook h = (EZPlaceholderHook) hook.getValue();
-					if (h.getPluginName().equalsIgnoreCase(n)) {
-						if (PlaceholderAPI.unregisterPlaceholderHook(hook.getKey())) {
-							plugin.getLogger().info("Unregistered placeholder hook to: "+n);
-						}
+		for (Entry<String, PlaceholderHook> hook : hooks.entrySet()) {
+				
+			PlaceholderHook i = hook.getValue();
+				
+			if (i instanceof EZPlaceholderHook) {
+					
+				EZPlaceholderHook h = (EZPlaceholderHook) i;
+					
+				if (h.getPluginName().equalsIgnoreCase(n)) {
+					if (PlaceholderAPI.unregisterPlaceholderHook(hook.getKey())) {
+						plugin.getLogger().info("Unregistered placeholder hook for placeholder identifier: "+n);
 					}
 				}
-			}
-			
-			return;
-		}
-				
-		if (PlaceholderAPI.unregisterPlaceholderHook(iHook.getIdentifier())) {
-			plugin.getLogger().info("Unregistered placeholder hook to: "+n);
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPluginload(PluginEnableEvent e) {
-		
-		String n = e.getPlugin().getName();
-		
-		if (n != null && !n.equals(plugin.getName())) {
-			
-			InternalHook hook = InternalHook.getHookByPluginName(n);
-			
-			if (hook == null) {
-				return;
-			}
-			
-			if (!hook.isRegistered()) {
-				hook.register();
+			} else if (i instanceof PlaceholderExpansion) {
+				PlaceholderExpansion ex = (PlaceholderExpansion) i;
+				if (ex.getPlugin() == null) {
+					continue;
+				}
+				if (ex.getPlugin().equalsIgnoreCase(n)) {
+					if (PlaceholderAPI.unregisterPlaceholderHook(hook.getKey())) {
+						plugin.getLogger().info("Unregistered placeholder expansion for placeholder identifier: "+n);
+					}
+				}
 			}
 		}
 	}

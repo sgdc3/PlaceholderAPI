@@ -8,27 +8,27 @@ import me.clip.placeholderapi.PlaceholderHook;
 
 public abstract class EZPlaceholderHook extends PlaceholderHook {
 
-	private String placeholderName;
+	private String identifier;
 	
 	private String plugin;
 	
-	public EZPlaceholderHook(Plugin plugin, String placeholderName) {
+	public EZPlaceholderHook(Plugin plugin, String identifier) {
 		Validate.notNull(plugin, "Plugin can not be null!");
-		Validate.isTrue(placeholderName != null && !placeholderName.isEmpty(), "Placeholder name can not be null or empty!");
-		this.placeholderName = placeholderName;
+		Validate.isTrue(identifier != null && !identifier.isEmpty(), "Placeholder name can not be null or empty!");
+		this.identifier = identifier;
 		this.plugin = plugin.getName();
 	}
 	
 	public boolean isHooked() {
-		return PlaceholderAPI.getRegisteredPlaceholderPlugins().contains(placeholderName);
+		return PlaceholderAPI.getRegisteredPlaceholderPlugins().contains(identifier);
 	}
 	
 	public boolean hook() {
-		return PlaceholderAPI.registerPlaceholderHook(placeholderName, this);
+		return PlaceholderAPI.registerPlaceholderHook(identifier, this);
 	}
 	
 	public String getPlaceholderName() {
-		return placeholderName;
+		return identifier;
 	}
 	
 	public String getPluginName() {

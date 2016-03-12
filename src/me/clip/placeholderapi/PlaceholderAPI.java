@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
-import me.clip.placeholderapi.internal.InternalHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,6 +27,10 @@ public class PlaceholderAPI {
 
 	private static Map<String, PlaceholderHook> placeholders = new HashMap<String, PlaceholderHook>();
 
+	/**
+	 * unregister all placeholder hooks which were registered by PlaceholderAPI
+	 * 
+	 */
 	protected static void resetInternalPlaceholderHooks() {
 		
 		if (placeholders == null || placeholders.isEmpty()) {
@@ -35,25 +39,32 @@ public class PlaceholderAPI {
 		
 		for (Entry<String, PlaceholderHook> pl : getPlaceholders().entrySet()) {
 			
-			if (InternalHook.getHookByIdentifier(pl.getKey()) != null) {
+			if (pl instanceof PlaceholderExpansion) {
 				Bukkit.getPluginManager().callEvent(new PlaceholderHookUnloadEvent(pl.getKey(), pl.getValue()));
 				unregisterPlaceholderHook(pl.getKey());
 			}
 		}
 	}
 	
+	/**
+	 * unregister ALL placeholder hooks that are currently registered
+	 */
 	protected static void unregisterAll() {
 		resetInternalPlaceholderHooks();
 		placeholders = null;
 	}
 	
-	
+	/**
+	 * check if a specific placeholder identifier has already been registered
+	 * @param plugin
+	 * @return
+	 */
 	public static boolean isRegistered(String plugin) {
 		if (placeholders == null || placeholders.isEmpty()) {
 			return false;
 		}
 		for (String pl : getRegisteredPlaceholderPlugins()) {
-			if (pl.equalsIgnoreCase(plugin)) {
+			if (pl.equals(plugin.toLowerCase())) {
 				return true;
 			}
 		}
@@ -100,7 +111,7 @@ public class PlaceholderAPI {
 			return false;
 		}
 
-		placeholders.put(plugin, placeholderHook);
+		placeholders.put(plugin.toLowerCase(), placeholderHook);
 		
 		return true;
 	}
@@ -149,7 +160,7 @@ public class PlaceholderAPI {
 			return false;
 		}
 		
-		return placeholders.remove(plugin) != null;
+		return placeholders.remove(plugin.toLowerCase()) != null;
 	}
 	
 	/**
@@ -177,9 +188,10 @@ public class PlaceholderAPI {
 			return external;
 		}
 		
-		for (String hook : placeholders.keySet()) {
-			if (InternalHook.getHookByIdentifier(hook) == null) {
-				external.add(hook);
+		for (Entry<String, PlaceholderHook> pl : getPlaceholders().entrySet()) {
+			
+			if (!(pl.getValue() instanceof PlaceholderExpansion)) {
+				external.add(pl.getKey());
 			}
 		}
 		return external;
@@ -200,30 +212,12 @@ public class PlaceholderAPI {
 	 */
 	public static boolean containsPlaceholders(String text) {
 		
-		Matcher placeholderMatcher = PLACEHOLDER_PATTERN.matcher(text);
-		
-		while (placeholderMatcher.find()) {
-			
-			String format = placeholderMatcher.group(1);
-			
-			int index = format.indexOf("_");
-		    
-		    if (index <= 0) {
-		    	continue;
-		    }
-		    
-		    String pl = format.substring(0, index);
-			
-			for (String registered : getRegisteredPlaceholderPlugins()) {
-				
-				if (pl.equalsIgnoreCase(registered)) {
-					
-					return true;
-				}
-			}
+		if (text == null || placeholders == null || placeholders.isEmpty()) {
+			return false;
 		}
+		
+		return PLACEHOLDER_PATTERN.matcher(text).find();
 
-		return false;
 	}
 	
 	/**
@@ -237,30 +231,7 @@ public class PlaceholderAPI {
 			return false;
 		}
 		
-		Matcher placeholderMatcher = BRACKET_PLACEHOLDER_PATTERN.matcher(text);
-		
-		while (placeholderMatcher.find()) {
-			
-			String format = placeholderMatcher.group(1);
-			
-			int index = format.indexOf("_");
-		    
-		    if (index < 0) {
-		    	continue;
-		    }
-		    
-		    String pl = format.substring(0, index);
-			
-			for (String registered : getRegisteredPlaceholderPlugins()) {
-				
-				if (pl.equalsIgnoreCase(registered)) {
-					
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return BRACKET_PLACEHOLDER_PATTERN.matcher(text).find();
 	}
 	
 	/**
@@ -347,7 +318,6 @@ public class PlaceholderAPI {
 		return temp;
 	}
 	
-
 	/**
 	 * set placeholders in the text specified
 	 * placeholders are matched with the pattern %<placeholder>% when set with this method

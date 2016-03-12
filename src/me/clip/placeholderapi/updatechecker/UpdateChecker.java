@@ -44,7 +44,7 @@ public class UpdateChecker implements Listener {
     	});
     }
     
-    protected void register() {
+    private void register() {
     	Bukkit.getPluginManager().registerEvents(this, plugin);
     }
     
