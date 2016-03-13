@@ -2,6 +2,8 @@ package me.clip.placeholderapi;
 
 import java.util.Set;
 
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -43,6 +45,38 @@ public class PlaceholderAPICommands implements CommandExecutor {
 				sms(s, "&c/papi reload");
 				sms(s, "&fReload the config settings");
 				
+			} else if (args.length > 1 && args[0].equalsIgnoreCase("info")) {
+
+				if (!s.hasPermission("placeholderapi.info")) {
+					sms(s, "&cYou don't have permission to do that!");
+					return true;
+				}
+				
+				PlaceholderExpansion ex = plugin.getExpansionManager().getLoadedExpansion(args[1]);
+				
+				if (ex == null) {
+					sms(s, "&cThere is no expansion loaded with the identifier: &f" + args[1]);
+					return true;
+				}
+				
+				sms(s, "&7Placeholder expansion info for: &f%" + ex.getIdentifier() + "_<identifier>%");
+				
+				sms(s, "&7Status: " + (ex.isRegistered() ? "&aRegistered" : "&cNot registered"));
+				
+				
+				if (ex.getAuthor() != null) {
+					sms(s, "&7Created by: &f" + ex.getAuthor());
+				}
+				
+				if (ex.getVersion() != null) {
+					sms(s, "&7Version: &f" + ex.getVersion());
+				}
+				
+				if (ex.getPlugin() != null) {
+					sms(s, "&7Requires plugin: &f" + ex.getPlugin());
+				}
+				
+				return true;
 			} else if (args.length > 1 && args[0].equalsIgnoreCase("parse")) {
 
 				if (!(s instanceof Player)) {

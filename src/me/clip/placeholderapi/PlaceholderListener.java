@@ -46,7 +46,7 @@ public class PlaceholderListener implements Listener {
 		PlaceholderExpansion e = m.getWaitingExpansion(event.getPlugin().getName().toLowerCase());
 		if (e != null && e.canRegister()) {
 			if (e.isRegistered() || m.registerExpansion(e)) {
-				m.removeExpansion(e.getPlugin());
+				m.removeWaitingExpansion(e.getPlugin());
 			}
 		}
 	}

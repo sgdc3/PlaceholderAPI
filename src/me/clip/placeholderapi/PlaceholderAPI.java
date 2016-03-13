@@ -39,7 +39,7 @@ public class PlaceholderAPI {
 		
 		for (Entry<String, PlaceholderHook> pl : getPlaceholders().entrySet()) {
 			
-			if (pl instanceof PlaceholderExpansion) {
+			if (pl.getValue() instanceof PlaceholderExpansion) {
 				Bukkit.getPluginManager().callEvent(new PlaceholderHookUnloadEvent(pl.getKey(), pl.getValue()));
 				unregisterPlaceholderHook(pl.getKey());
 			}

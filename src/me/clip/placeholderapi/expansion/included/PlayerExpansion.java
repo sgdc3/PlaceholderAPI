@@ -17,7 +17,6 @@ public class PlayerExpansion extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		// TODO Auto-generated method stub
 		return "player";
 	}
 

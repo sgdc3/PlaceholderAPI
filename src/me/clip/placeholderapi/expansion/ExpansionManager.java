@@ -15,8 +15,11 @@ import java.util.jar.JarInputStream;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.clip.placeholderapi.PlaceholderHook;
 import me.clip.placeholderapi.expansion.included.PlayerExpansion;
+import me.clip.placeholderapi.expansion.included.ServerExpansion;
 
 public final class ExpansionManager {
 	
@@ -36,11 +39,34 @@ public final class ExpansionManager {
 		return cache.containsKey(plugin) ? cache.get(plugin) : null;
 	}
 	
-	public boolean removeExpansion(String identifier) {
+	public boolean removeWaitingExpansion(String identifier) {
 		return cache.remove(identifier) != null;
 	}
 	
+	public PlaceholderExpansion getLoadedExpansion(String name) {
+		PlaceholderExpansion ex = null;
+		
+		ex = getWaitingExpansion(name);
+		
+		if (ex == null) {
+			for (Entry<String, PlaceholderHook> hook : PlaceholderAPI.getPlaceholders().entrySet()) {
+				if (hook.getValue() instanceof PlaceholderExpansion) {
+					if (name.equalsIgnoreCase(hook.getKey())) {
+						ex = (PlaceholderExpansion) hook.getValue();
+						break;
+					}
+				}
+			}
+		}
+		
+		return ex;
+	}
+	
 	public boolean registerExpansion(PlaceholderExpansion c) {
+		
+			if (c.getIdentifier() == null) {
+				return false;
+			}
 		
     		if (!c.canRegister()) {
     			if (c.getPlugin() != null) {
@@ -60,6 +86,8 @@ public final class ExpansionManager {
     				
     			Map<String, Object> defaults = ((Configurable)c).getDefaults();
     				
+    			String pre = "expansions." + c.getIdentifier() + ".";
+    			
     			if (defaults != null && !defaults.isEmpty()) {
     					
     				FileConfiguration cfg = plugin.getConfig();
@@ -72,14 +100,14 @@ public final class ExpansionManager {
     					}
     						
     					if (entries.getValue() == null) {
-    						if (cfg.contains(entries.getKey())) {
+    						if (cfg.contains(pre + entries.getKey())) {
     							save = true;
-    							cfg.set(entries.getKey(), null);
+    							cfg.set(pre + entries.getKey(), null);
     						}
     					} else {
-    						if (!cfg.contains(entries.getKey())) {
+    						if (!cfg.contains(pre + entries.getKey())) {
     							save = true;
-    							cfg.set(entries.getKey(), entries.getValue());
+    							cfg.set(pre + entries.getKey(), entries.getValue());
     						}
     					}
     				}
@@ -109,6 +137,7 @@ public final class ExpansionManager {
 		}
     	
     	registerExpansion(new PlayerExpansion());
+    	registerExpansion(new ServerExpansion());
     	
         List<Class<? extends PlaceholderExpansion>> subs = getAllClasses("expansions");
         
