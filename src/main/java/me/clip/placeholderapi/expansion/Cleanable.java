@@ -6,14 +6,15 @@ import org.bukkit.entity.Player;
  * This interface allows a class which extends a {@link PlaceholderExpansion}
  * to have the cleanup method called every time a player leaves the server.
  * This is useful if we want to clean up after the player
- * @author Ryan McCarthy
  *
+ * @author Ryan McCarthy
  */
 public interface Cleanable {
 
-	/**
-	 * Called when a player leaves the server
-	 * @param p (@link Player} who left the server
-	 */
-	public void cleanup(Player p);
+    /**
+     * Called when a player leaves the server
+     *
+     * @param p (@link Player} who left the server
+     */
+    public void cleanup(Player p);
 }

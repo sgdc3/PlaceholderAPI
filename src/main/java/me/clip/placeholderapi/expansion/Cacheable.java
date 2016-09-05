@@ -5,13 +5,13 @@ package me.clip.placeholderapi.expansion;
  * to have the clear method called when the implementing expansion is unregistered
  * from PlaceholderAPI.
  * This is useful if we want to do things when the implementing hook is unregistered
- * @author Ryan McCarthy
  *
+ * @author Ryan McCarthy
  */
 public interface Cacheable {
 
-	/**
-	 * Called when the implementing class is unregistered from PlaceholderAPI
-	 */
-	public void clear();
+    /**
+     * Called when the implementing class is unregistered from PlaceholderAPI
+     */
+    public void clear();
 }
